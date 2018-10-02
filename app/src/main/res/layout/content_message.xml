@@ -8,4 +8,9 @@
     tools:context=".MessageActivity"
     tools:showIn="@layout/activity_message">
 
+    <TextView
+        android:id="@+id/dummy3"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
 </android.support.constraint.ConstraintLayout>

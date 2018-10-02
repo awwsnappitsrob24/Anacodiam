@@ -8,4 +8,9 @@
     tools:context=".ShareActivity"
     tools:showIn="@layout/activity_share">
 
+    <TextView
+        android:id="@+id/dummy2"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
 </android.support.constraint.ConstraintLayout>

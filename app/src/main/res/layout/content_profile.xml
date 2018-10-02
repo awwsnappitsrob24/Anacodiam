@@ -8,4 +8,9 @@
     tools:context=".ProfileActivity"
     tools:showIn="@layout/activity_profile">
 
+    <TextView
+        android:id="@+id/dummy"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
 </android.support.constraint.ConstraintLayout>

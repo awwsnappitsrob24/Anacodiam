@@ -1,5 +1,6 @@
 package edu.csulb.rob.anacodiam;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -83,12 +84,20 @@ public class HomepageActivity extends AppCompatActivity
 
         if (id == R.id.nav_profile) {
             // GO TO PROFILE PAGE
+            Intent profilePageIntent = new Intent(this, ProfileActivity.class);
+            startActivity(profilePageIntent);
         } else if (id == R.id.nav_report) {
             // GO TO REPORT PAGE
+            Intent reportPageIntent = new Intent(this, ReportActivity.class);
+            startActivity(reportPageIntent);
         } else if (id == R.id.nav_share) {
             // GO TO SHARE PAGE
+            Intent sharePageIntent = new Intent(this, ShareActivity.class);
+            startActivity(sharePageIntent);
         } else if (id == R.id.nav_messages) {
             // GO TO MESSAGE PAGE
+            Intent messagePageIntent = new Intent(this, MessageActivity.class);
+            startActivity(messagePageIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
