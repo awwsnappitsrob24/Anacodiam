@@ -8,4 +8,9 @@
     tools:context=".HomepageActivity"
     tools:showIn="@layout/app_bar_homepage">
 
+    <com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_height="210dp"
+        android:id="@+id/calorie_graph"/>
+
 </android.support.constraint.ConstraintLayout>
