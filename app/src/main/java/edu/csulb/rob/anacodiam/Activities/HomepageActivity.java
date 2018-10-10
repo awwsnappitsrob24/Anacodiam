@@ -1,4 +1,4 @@
-package edu.csulb.rob.anacodiam;
+package edu.csulb.rob.anacodiam.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +17,7 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import edu.csulb.rob.anacodiam.R;
 
 
 public class HomepageActivity extends AppCompatActivity

@@ -1,9 +1,8 @@
-package edu.csulb.rob.anacodiam;
+package edu.csulb.rob.anacodiam.Activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -29,19 +28,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
 //For Retrofit
 import java.net.URL;
+
+import edu.csulb.rob.anacodiam.R;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -322,54 +320,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            /**
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            // DELETE THIS WITH OUR OWN LOGIC
-            // This is where we check on our database if the user's information matches.
-            // If it does, log them in, if not, don't.
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-            // TODO: register the new account here.
-            return true;
-            **/
-
             //Using Login URL
             URL url = null;
-            try {
-                url = new URL("http://192.168.99.100:8000/api/rest-auth/login/");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-
             HttpURLConnection connection = null;
             BufferedReader reader = null;
             try {
+                url = new URL("http://192.168.99.100:8000/api/rest-auth/login"); // not working.....
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
+                Log.d("Response: ", "> " + connection.getResponseCode());
 
                 InputStream stream = connection.getInputStream();
-
                 reader = new BufferedReader(new InputStreamReader(stream));
-
                 StringBuffer buffer = new StringBuffer();
                 String line = "";
 
+                // Make JSONObjects here
                 while ((line = reader.readLine()) != null) {
                     buffer.append(line+"\n");
-                    Log.d("Response: ", "> " + line);   //here u ll get whole response...... :-)
-
+                    Log.d("Response: ", "> " + line); // the output should be here....
                 }
+
             } catch (java.io.IOException e) {
                 e.printStackTrace();
             } finally {
@@ -384,8 +355,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     e.printStackTrace();
                 }
             }
-            return null;
 
+            // TODO: register the new account here.
+            return null;
         }
 
         @Override
