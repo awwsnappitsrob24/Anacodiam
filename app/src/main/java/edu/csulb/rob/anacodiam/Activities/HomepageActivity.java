@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -33,7 +34,7 @@ public class HomepageActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 // Add calories manually here
-
+                Toast.makeText(getApplicationContext(), "ADDED CALORIES!", Toast.LENGTH_LONG).show();
             }
         });
 
