@@ -9,10 +9,10 @@ import retrofit2.http.POST;
 
 public interface AuthenticationService {
 
-    @POST("rest-auth/login")
+    @POST("rest-auth/login/")
     Call<JsonElement> signin(@Body RequestBody body);
 
-    @POST("rest-auth/registration")
+    @POST("rest-auth/registration/")
     Call<JsonElement> signup(@Body RequestBody body);
 
 }

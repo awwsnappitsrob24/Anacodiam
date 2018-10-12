@@ -24,4 +24,26 @@
     <string name="title_activity_share">ShareActivity</string>
     <string name="title_activity_message">MessageActivity</string>
     <string name="title_activity_report">ReportActivity</string>
+
+    <string-array name = "weight_units">
+        <item>lbs</item>
+        <item>kg</item>
+    </string-array>
+
+    <string-array name = "height_units">
+        <item>ft in</item>
+        <item>cm</item>
+    </string-array>
+
+    <string-array name = "gender">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
+    <string-array name = "activity_level">
+        <item>Sedentary</item>
+        <item>Mildly Active</item>
+        <item>Very Active</item>
+    </string-array>
+
 </resources>

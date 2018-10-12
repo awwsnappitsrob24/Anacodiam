@@ -3,6 +3,7 @@ package edu.csulb.rob.anacodiam.Activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -31,6 +32,8 @@ import android.widget.Toast;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -84,6 +87,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private AuthenticationService authenticationService;
 
+    private LoginActivity mSelf; // use "this" on callback
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +118,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        authenticationService = APIClient.getClient().create(AuthenticationService.class);
+        authenticationService = APIClient.getClient().create(AuthenticationService.class); // if i create more services, change the class name
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
@@ -213,9 +218,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             //mAuthTask.execute((Void) null);
             //mAuthTask.execute();
 
-            //Intent homepageIntent = new Intent(this, HomepageActivity.class);
-            //startActivity(homepageIntent);
+            Intent homepageIntent = new Intent(this, HomepageActivity.class);
+            startActivity(homepageIntent);
 
+            /**
             JsonObject jObj = new JsonObject();
 
             jObj.addProperty("email", mEmailView.getText().toString());
@@ -227,14 +233,28 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             call.enqueue(new Callback<JsonElement>() {
                 @Override
                 public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                    Log.d("Response", "............");
+                    //Log.d("Response", "............");
+                    if(response.isSuccessful()) {
+                        JsonObject jObj = response.body().getAsJsonObject();
+
+                        APIClient.setToken(jObj.get("token").getAsString());
+
+                        // start new intent here
+                    } else {
+                        // Bad credentials
+                        //mEmail.setError();
+                    }
+
                 }
 
                 @Override
                 public void onFailure(Call<JsonElement> call, Throwable t) {
-                    Log.d("Response", "............");
+                    //Log.d("Response", "............");
+                    call.cancel();
+
                 }
             });
+             **/
         }
     }
 

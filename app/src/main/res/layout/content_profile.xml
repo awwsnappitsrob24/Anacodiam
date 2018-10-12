@@ -8,9 +8,283 @@
     tools:context=".Activities.ProfileActivity"
     tools:showIn="@layout/activity_profile">
 
-    <TextView
-        android:id="@+id/dummy"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="495dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="76dp"
+            tools:layout_editor_absoluteY="172dp">
+
+            <TextView
+                android:id="@+id/txtViewUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="24dp"
+                android:text="Username"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/txtUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewUsername"
+                app:layout_constraintTop_toBottomOf="@+id/txtViewUsername" />
+
+            <TextView
+                android:id="@+id/txtViewPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Password"
+                app:layout_constraintLeft_toLeftOf="@+id/txtUsername"
+                app:layout_constraintTop_toBottomOf="@+id/txtUsername" />
+
+            <EditText
+                android:id="@+id/txtPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:inputType="textPassword"
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
+                app:layout_constraintTop_toBottomOf="@+id/txtViewPassword" />
+
+            <TextView
+                android:id="@+id/txtViewFirstName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="First Name"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtPassword" />
+
+            <EditText
+                android:id="@+id/txtPersonFirstName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtViewFirstName"
+                tools:ignore="MissingConstraints" />
+
+            <TextView
+                android:id="@+id/txtViewLastName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Last Name"
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
+                app:layout_constraintTop_toBottomOf="@+id/txtPersonFirstName" />
+
+            <EditText
+                android:id="@+id/txtPersonLastName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
+                app:layout_constraintRight_toRightOf="@+id/txtPersonFirstName"
+                app:layout_constraintTop_toBottomOf="@+id/txtViewLastName"
+                tools:ignore="MissingConstraints" />
+
+            <TextView
+                android:id="@+id/txtViewWeight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Weight"
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
+                app:layout_constraintTop_toBottomOf="@+id/txtPersonLastName" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/txtWeight"
+                    android:layout_width="8dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="number"
+                    app:layout_constraintLeft_toLeftOf="@+id/txtPersonLastName"
+                    app:layout_constraintTop_toBottomOf="@+id/txtViewWeight"
+                    tools:layout_weight="2" />
+
+                <Spinner
+                    android:id="@+id/spnWeightUnits"
+                    android:layout_width="6dp"
+                    android:layout_height="27dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:textColor="#000000"
+                    app:layout_constraintBottom_toBottomOf="@+id/txtWeight"
+                    app:layout_constraintLeft_toRightOf="@+id/txtWeight" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtViewHeight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:text="Height"
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
+                app:layout_constraintTop_toBottomOf="@+id/txtWeight" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/txtHeight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
+                    app:layout_constraintTop_toBottomOf="@+id/txtViewHeight" />
+
+                <TextView
+                    android:id="@+id/txtViewHeightUnit1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:text="ft"
+                    app:layout_constraintBottom_toBottomOf="@+id/txtHeight"
+                    app:layout_constraintLeft_toRightOf="@+id/txtHeight" />
+
+                <EditText
+                    android:id="@+id/txtHeight2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    app:layout_constraintBottom_toBottomOf="@+id/txtHeight"
+                    app:layout_constraintLeft_toRightOf="@+id/txtViewHeightUnit1" />
+
+                <TextView
+                    android:id="@+id/txtViewHeightUnit2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:layout_weight="0"
+                    android:text="in"
+                    app:layout_constraintBottom_toBottomOf="@+id/txtHeight2"
+                    app:layout_constraintLeft_toRightOf="@+id/txtHeight2" />
+            </LinearLayout>
+
+            <Spinner
+                android:id="@+id/spnHeight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="100dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintLeft_toLeftOf="@+id/txtHeight"
+                app:layout_constraintTop_toBottomOf="@+id/txtHeight" />
+
+            <TextView
+                android:id="@+id/txtViewGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Gender"
+                app:layout_constraintLeft_toLeftOf="@+id/spnHeight"
+                app:layout_constraintTop_toBottomOf="@+id/spnHeight" />
+
+            <Spinner
+                android:id="@+id/spnGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="100dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewGender"
+                app:layout_constraintTop_toBottomOf="@+id/txtViewGender" />
+
+            <TextView
+                android:id="@+id/txtViewActivity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Activity Level"
+                app:layout_constraintLeft_toLeftOf="@+id/spnGender"
+                app:layout_constraintTop_toBottomOf="@+id/spnGender" />
+
+            <Spinner
+                android:id="@+id/spnActivity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="100dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewActivity"
+                app:layout_constraintTop_toBottomOf="@+id/txtViewActivity" />
+
+            <TextView
+                android:id="@+id/txtViewAge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Age"
+                app:layout_constraintLeft_toLeftOf="@+id/spnActivity"
+                app:layout_constraintTop_toBottomOf="@+id/spnActivity" />
+
+            <EditText
+                android:id="@+id/txtAge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="100dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:inputType="number"
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewAge"
+                app:layout_constraintTop_toBottomOf="@+id/txtViewAge" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
