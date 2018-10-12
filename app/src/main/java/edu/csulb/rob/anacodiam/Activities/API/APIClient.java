@@ -27,7 +27,8 @@ public class APIClient {
             Request original = chain.request();
 
             Request request = original.newBuilder()
-                    .header("Authorization", "JWT" + mToken)
+                    //.header("Authorization", "JWT" + mToken)
+                    .header("Authorization", mToken)
                     .method(original.method(), original.body())
                     .build();
 
@@ -37,8 +38,8 @@ public class APIClient {
         OkHttpClient client = builder.build();
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.39.103.87:8000/api/")
-//                .baseUrl("http://192.168.99.100:8000/api/")
+//                .baseUrl("http://10.39.103.87:8000/api/")
+                .baseUrl("http://192.168.0.126:8000/api/")
 //                .baseUrl("http://10.0.2.2:8000/api/") // for emulator
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)

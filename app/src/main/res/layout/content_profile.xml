@@ -25,7 +25,7 @@
             tools:layout_editor_absoluteY="172dp">
 
             <TextView
-                android:id="@+id/txtViewUsername"
+                android:id="@+id/txtViewPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -35,15 +35,36 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/txtUsername"
+                android:id="@+id/txtFirstName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:inputType="textPersonName"
-                app:layout_constraintLeft_toLeftOf="@+id/txtViewUsername"
-                app:layout_constraintTop_toBottomOf="@+id/txtViewUsername" />
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
+                app:layout_constraintTop_toBottomOf="@+id/txtViewPassword" />
+
+            <TextView
+                android:id="@+id/txtViewConfirmPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Password"
+                app:layout_constraintLeft_toLeftOf="@+id/txtFirstName"
+                app:layout_constraintTop_toBottomOf="@+id/txtFirstName" />
+
+            <EditText
+                android:id="@+id/txtLastName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:inputType="textPassword"
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewConfirmPassword"
+                app:layout_constraintTop_toBottomOf="@+id/txtViewConfirmPassword" />
 
             <TextView
                 android:id="@+id/txtViewPassword"
@@ -51,9 +72,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Password"
-                app:layout_constraintLeft_toLeftOf="@+id/txtUsername"
-                app:layout_constraintTop_toBottomOf="@+id/txtUsername" />
+                android:text="First Name"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtLastName" />
 
             <EditText
                 android:id="@+id/txtPassword"
@@ -62,45 +83,24 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:ems="10"
-                android:inputType="textPassword"
-                app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
-                app:layout_constraintTop_toBottomOf="@+id/txtViewPassword" />
-
-            <TextView
-                android:id="@+id/txtViewFirstName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:text="First Name"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtPassword" />
-
-            <EditText
-                android:id="@+id/txtPersonFirstName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:ems="10"
                 android:inputType="textPersonName"
-                app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtViewFirstName"
+                app:layout_constraintTop_toBottomOf="@+id/txtViewPassword"
                 tools:ignore="MissingConstraints" />
 
             <TextView
-                android:id="@+id/txtViewLastName"
+                android:id="@+id/txtViewConfirmPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Last Name"
-                app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
-                app:layout_constraintTop_toBottomOf="@+id/txtPersonFirstName" />
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
+                app:layout_constraintTop_toBottomOf="@+id/txtPassword" />
 
             <EditText
-                android:id="@+id/txtPersonLastName"
+                android:id="@+id/txtConfirmPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -108,20 +108,20 @@
                 android:ems="10"
                 android:inputType="textPersonName"
                 app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
-                app:layout_constraintRight_toRightOf="@+id/txtPersonFirstName"
-                app:layout_constraintTop_toBottomOf="@+id/txtViewLastName"
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
+                app:layout_constraintRight_toRightOf="@+id/txtPassword"
+                app:layout_constraintTop_toBottomOf="@+id/txtViewConfirmPassword"
                 tools:ignore="MissingConstraints" />
 
             <TextView
-                android:id="@+id/txtViewWeight"
+                android:id="@+id/txtViewEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Weight"
-                app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
-                app:layout_constraintTop_toBottomOf="@+id/txtPersonLastName" />
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
+                app:layout_constraintTop_toBottomOf="@+id/txtConfirmPassword" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -129,7 +129,7 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/txtWeight"
+                    android:id="@+id/txtEmail"
                     android:layout_width="8dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
@@ -137,8 +137,8 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:inputType="number"
-                    app:layout_constraintLeft_toLeftOf="@+id/txtPersonLastName"
-                    app:layout_constraintTop_toBottomOf="@+id/txtViewWeight"
+                    app:layout_constraintLeft_toLeftOf="@+id/txtConfirmPassword"
+                    app:layout_constraintTop_toBottomOf="@+id/txtViewEmail"
                     tools:layout_weight="2" />
 
                 <Spinner
@@ -148,8 +148,8 @@
                     android:layout_marginTop="8dp"
                     android:layout_weight="1"
                     android:textColor="#000000"
-                    app:layout_constraintBottom_toBottomOf="@+id/txtWeight"
-                    app:layout_constraintLeft_toRightOf="@+id/txtWeight" />
+                    app:layout_constraintBottom_toBottomOf="@+id/txtEmail"
+                    app:layout_constraintLeft_toRightOf="@+id/txtEmail" />
 
             </LinearLayout>
 
@@ -161,8 +161,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:text="Height"
-                app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
-                app:layout_constraintTop_toBottomOf="@+id/txtWeight" />
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
+                app:layout_constraintTop_toBottomOf="@+id/txtEmail" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -178,7 +178,7 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:inputType="textPersonName"
-                    app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
+                    app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
                     app:layout_constraintTop_toBottomOf="@+id/txtViewHeight" />
 
                 <TextView

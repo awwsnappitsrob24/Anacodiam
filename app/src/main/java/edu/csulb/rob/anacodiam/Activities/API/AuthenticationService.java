@@ -15,4 +15,5 @@ public interface AuthenticationService {
     @POST("rest-auth/registration/")
     Call<JsonElement> signup(@Body RequestBody body);
 
+
 }

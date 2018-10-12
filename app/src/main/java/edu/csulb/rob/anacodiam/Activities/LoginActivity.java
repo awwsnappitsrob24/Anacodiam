@@ -118,6 +118,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
+        Button mEmailRegisterButton = (Button) findViewById(R.id.email_register_button);
+        mEmailRegisterButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // GO TO USER REGISTRATION PAGE!!
+                /**
+                 *  First Name
+                 *  Last Name
+                 *  Password
+                 *  Confirm Password
+                 *  Email
+                 */
+                Intent userRegistrationIntent = new Intent(getApplicationContext(), UserRegistrationActivity.class);
+                startActivity(userRegistrationIntent);
+            }
+        });
+
         authenticationService = APIClient.getClient().create(AuthenticationService.class); // if i create more services, change the class name
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
@@ -211,50 +228,43 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            //mAuthTask = new UserLoginTask(email, password);
-            //mAuthTask.execute((Void) null);
-            //mAuthTask.execute();
-
-            Intent homepageIntent = new Intent(this, HomepageActivity.class);
-            startActivity(homepageIntent);
-
-            /**
             JsonObject jObj = new JsonObject();
-
             jObj.addProperty("email", mEmailView.getText().toString());
             jObj.addProperty("password", mPasswordView.getText().toString());
 
             // Call API and try to authenticate
+            mSelf = this;
             Call<JsonElement> call = authenticationService.signin(RequestBody.create
                     (MediaType.parse("application/json"), jObj.toString()));
             call.enqueue(new Callback<JsonElement>() {
                 @Override
                 public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                    //Log.d("Response", "............");
                     if(response.isSuccessful()) {
-                        JsonObject jObj = response.body().getAsJsonObject();
+                        Log.d("Response", "WORKED");
 
+                        JsonObject jObj = response.body().getAsJsonObject();
                         APIClient.setToken(jObj.get("token").getAsString());
 
+                        Log.d("tokenstring", jObj.get("token").getAsString());
+
                         // start new intent here
+                        Intent homepageIntent = new Intent(mSelf.getApplicationContext(), HomepageActivity.class);
+                        startActivity(homepageIntent);
                     } else {
                         // Bad credentials
-                        //mEmail.setError();
+                        Log.d("Response", "NAH");
+                        mEmailView.setError("Bad credentials!");
+                        mPasswordView.setError("Bad credentials!");
                     }
-
                 }
 
                 @Override
                 public void onFailure(Call<JsonElement> call, Throwable t) {
-                    //Log.d("Response", "............");
+                    Log.d("Response", "............");
                     call.cancel();
 
                 }
             });
-             **/
         }
     }
 
