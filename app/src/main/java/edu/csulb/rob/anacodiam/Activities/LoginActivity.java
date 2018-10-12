@@ -28,6 +28,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +43,14 @@ import java.util.List;
 //For Retrofit
 import java.net.URL;
 
+import edu.csulb.rob.anacodiam.Activities.API.APIClient;
+import edu.csulb.rob.anacodiam.Activities.API.AuthenticationService;
 import edu.csulb.rob.anacodiam.R;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -71,6 +82,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+    private AuthenticationService authenticationService;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +113,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
+        authenticationService = APIClient.getClient().create(AuthenticationService.class);
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
@@ -194,12 +209,32 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            //mAuthTask = new UserLoginTask(email, password);
             //mAuthTask.execute((Void) null);
-            mAuthTask.execute();
+            //mAuthTask.execute();
 
             //Intent homepageIntent = new Intent(this, HomepageActivity.class);
             //startActivity(homepageIntent);
+
+            JsonObject jObj = new JsonObject();
+
+            jObj.addProperty("email", mEmailView.getText().toString());
+            jObj.addProperty("password", mPasswordView.getText().toString());
+
+            // Call API and try to authenticate
+            Call<JsonElement> call = authenticationService.signin(RequestBody.create
+                    (MediaType.parse("application/json"), jObj.toString()));
+            call.enqueue(new Callback<JsonElement>() {
+                @Override
+                public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                    Log.d("Response", "............");
+                }
+
+                @Override
+                public void onFailure(Call<JsonElement> call, Throwable t) {
+                    Log.d("Response", "............");
+                }
+            });
         }
     }
 
@@ -321,6 +356,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
             //Using Login URL
+            /**
             URL url = null;
             HttpURLConnection connection = null;
             BufferedReader reader = null;
@@ -357,6 +393,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
 
             // TODO: register the new account here.
+            return null;
+             **/
+
             return null;
         }
 

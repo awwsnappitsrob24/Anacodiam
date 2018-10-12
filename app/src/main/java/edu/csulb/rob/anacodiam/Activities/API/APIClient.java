@@ -1,4 +1,4 @@
-package edu.csulb.rob.anacodiam.Activities;
+package edu.csulb.rob.anacodiam.Activities.API;
 
 import java.io.IOException;
 import okhttp3.Interceptor;
@@ -37,9 +37,9 @@ public class APIClient {
         OkHttpClient client = builder.build();
 
         retrofit = new Retrofit.Builder()
-//                .baseUrl("http://10.0.2.2:6969")
-//                .baseUrl("http://192.168.1.137:6969")
-                .baseUrl("http://163.172.189.61:6969")
+//                .baseUrl("http://10.0.2.2:8000/api/")
+                .baseUrl("http://192.168.99.100:8000/api/")
+//                .baseUrl("http://163.172.189.61:6969")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
