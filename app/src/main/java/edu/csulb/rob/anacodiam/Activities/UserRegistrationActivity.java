@@ -41,15 +41,15 @@ public class UserRegistrationActivity extends AppCompatActivity {
 
         firstNameView = (TextView) findViewById(R.id.txtViewFirstName);
         lastNameView = (TextView) findViewById(R.id.txtViewLastName);
-        passwordView = (TextView) findViewById(R.id.txtViewPassword);
-        confirmPasswordView = (TextView) findViewById(R.id.txtViewConfirmPassword);
-        emailView = (TextView) findViewById(R.id.txtViewEmail);
+        passwordView = (TextView) findViewById(R.id.txtViewFirstName);
+        confirmPasswordView = (TextView) findViewById(R.id.txtViewLastName);
+        emailView = (TextView) findViewById(R.id.txtViewWeight);
 
         firstNameText = (EditText) findViewById(R.id.txtFirstName);
         lastNameText = (EditText) findViewById(R.id.txtLastName);
-        passwordText = (EditText) findViewById(R.id.txtPassword);
-        confirmPasswordText = (EditText) findViewById(R.id.txtConfirmPassword);
-        emailText = (EditText) findViewById(R.id.txtEmail);
+        passwordText = (EditText) findViewById(R.id.txtFirstName);
+        confirmPasswordText = (EditText) findViewById(R.id.txtLastName);
+        emailText = (EditText) findViewById(R.id.txtWeight);
 
         submitButton = (Button) findViewById(R.id.submitButton);
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -83,14 +83,31 @@ public class UserRegistrationActivity extends AppCompatActivity {
         boolean cancel = false;
         View focusView = null;
 
+        // Check if the user entered a name (field is required)
+        if(TextUtils.isEmpty(fName)) {
+            firstNameView.setError(getString(R.string.error_field_required));
+            focusView = firstNameView;
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(lName)) {
+            lastNameView.setError(getString(R.string.error_field_required));
+            focusView = lastNameView;
+            cancel = true;
+        }
+
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && (!isPasswordValid(password))) {
+        if(TextUtils.isEmpty(password)) {
+            passwordView.setError(getString(R.string.error_field_required));
+            focusView = passwordView;
+            cancel = true;
+        } else if((!isPasswordValid(password))) {
             passwordView.setError(getString(R.string.error_invalid_password));
             focusView = passwordView;
             cancel = true;
         }
 
-        // Check for a valid email address.
+
+        // Check for a valid email address, if the user entered one
         if (TextUtils.isEmpty(email)) {
             emailView.setError(getString(R.string.error_field_required));
             focusView = emailView;
@@ -98,6 +115,17 @@ public class UserRegistrationActivity extends AppCompatActivity {
         } else if (!isEmailValid(email)) {
             emailView.setError(getString(R.string.error_invalid_email));
             focusView = emailView;
+            cancel = true;
+        }
+
+        // Check if user confirmed password (confirmed password must be same as original password)
+        if(TextUtils.isEmpty(confirmPassword)) {
+            confirmPasswordView.setError(getString(R.string.error_field_required));
+            focusView = confirmPasswordView;
+            cancel = true;
+        } else if(!confirmPasswordText.getText().toString().equals(passwordText.getText().toString())) {
+            confirmPasswordView.setError("The password does not match the original password");
+            focusView = confirmPasswordView;
             cancel = true;
         }
 
@@ -130,34 +158,26 @@ public class UserRegistrationActivity extends AppCompatActivity {
 
                         Log.d("tokenstring", jObj.get("token").getAsString());
 
-                        // start new intent here
                         Intent homepageIntent = new Intent(mSelf.getApplicationContext(), HomepageActivity.class);
                         startActivity(homepageIntent);
                     } else {
-                        // Bad credentials
-                        Log.d("Response", "NAH");
-                        //emailView.setError("Bad credentials!");
-                        //passwordView.setError("Bad credentials!");
+                        //Log.d("Response", "Didn't work. SORRY!");
                     }
                 }
 
                 @Override
                 public void onFailure(Call<JsonElement> call, Throwable t) {
-                    Log.d("Response", "............");
                     call.cancel();
-
                 }
             });
         }
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 8;
     }
 }

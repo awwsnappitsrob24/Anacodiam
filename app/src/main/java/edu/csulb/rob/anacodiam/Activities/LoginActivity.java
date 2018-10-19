@@ -28,24 +28,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
 //For Retrofit
-import java.net.URL;
-
 import edu.csulb.rob.anacodiam.Activities.API.APIClient;
 import edu.csulb.rob.anacodiam.Activities.API.AuthenticationService;
 import edu.csulb.rob.anacodiam.R;
@@ -67,13 +56,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.1
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -123,13 +105,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view) {
                 // GO TO USER REGISTRATION PAGE!!
-                /**
-                 *  First Name
-                 *  Last Name
-                 *  Password
-                 *  Confirm Password
-                 *  Email
-                 */
                 Intent userRegistrationIntent = new Intent(getApplicationContext(), UserRegistrationActivity.class);
                 startActivity(userRegistrationIntent);
             }
@@ -240,19 +215,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 @Override
                 public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                     if(response.isSuccessful()) {
-                        Log.d("Response", "WORKED");
-
                         JsonObject jObj = response.body().getAsJsonObject();
                         APIClient.setToken(jObj.get("token").getAsString());
 
-                        Log.d("tokenstring", jObj.get("token").getAsString());
+                        // do whatever you want here
+                        //Log.d("login", "SUCCESSFUL");
 
                         // start new intent here
                         Intent homepageIntent = new Intent(mSelf.getApplicationContext(), HomepageActivity.class);
                         startActivity(homepageIntent);
                     } else {
                         // Bad credentials
-                        Log.d("Response", "NAH");
+                        //Log.d("login", "WRONG STUFF");
                         mEmailView.setError("Bad credentials!");
                         mPasswordView.setError("Bad credentials!");
                     }
@@ -260,21 +234,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 @Override
                 public void onFailure(Call<JsonElement> call, Throwable t) {
-                    Log.d("Response", "............");
+                   // Log.d("login", "YOU DUN GOOFED");
                     call.cancel();
-
                 }
             });
         }
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 
@@ -385,47 +356,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            //Using Login URL
-            /**
-            URL url = null;
-            HttpURLConnection connection = null;
-            BufferedReader reader = null;
-            try {
-                url = new URL("http://192.168.99.100:8000/api/rest-auth/login"); // not working.....
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-                Log.d("Response: ", "> " + connection.getResponseCode());
-
-                InputStream stream = connection.getInputStream();
-                reader = new BufferedReader(new InputStreamReader(stream));
-                StringBuffer buffer = new StringBuffer();
-                String line = "";
-
-                // Make JSONObjects here
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line+"\n");
-                    Log.d("Response: ", "> " + line); // the output should be here....
-                }
-
-            } catch (java.io.IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
-                try {
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            // TODO: register the new account here.
-            return null;
-             **/
-
             return null;
         }
 
