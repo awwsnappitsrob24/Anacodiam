@@ -7,55 +7,16 @@
     tools:context=".Activities.UserRegistrationActivity">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/linearLayout4"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="127dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/txtViewFirstName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="24dp"
-            android:text="First Name"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/txtFirstName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
-            app:layout_constraintTop_toBottomOf="@+id/txtViewFirstName" />
-
-        <TextView
-            android:id="@+id/txtViewLastName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Last Name"
-            app:layout_constraintLeft_toLeftOf="@+id/txtFirstName"
-            app:layout_constraintTop_toBottomOf="@+id/txtFirstName" />
-
-        <EditText
-            android:id="@+id/txtLastName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            app:layout_constraintLeft_toLeftOf="@+id/txtViewLastName"
-            app:layout_constraintTop_toBottomOf="@+id/txtViewLastName" />
-
-        <TextView
-            android:id="@+id/txtViewFirstName"
+            android:id="@+id/txtViewPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
@@ -65,16 +26,16 @@
             app:layout_constraintTop_toBottomOf="@+id/txtLastName" />
 
         <EditText
-            android:id="@+id/txtFirstName"
+            android:id="@+id/txtPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:ems="10"
             android:inputType="textPassword"
-            app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
+            app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtViewFirstName"
+            app:layout_constraintTop_toBottomOf="@+id/txtViewPassword"
             tools:ignore="MissingConstraints" />
 
         <TextView
@@ -84,8 +45,8 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:text="Confirm Password"
-            app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
-            app:layout_constraintTop_toBottomOf="@+id/txtFirstName" />
+            app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
+            app:layout_constraintTop_toBottomOf="@+id/txtPassword" />
 
         <EditText
             android:id="@+id/txtLastName"
@@ -96,8 +57,8 @@
             android:ems="10"
             android:inputType="textPassword"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
-            app:layout_constraintRight_toRightOf="@+id/txtFirstName"
+            app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
+            app:layout_constraintRight_toRightOf="@+id/txtPassword"
             app:layout_constraintTop_toBottomOf="@+id/txtViewLastName"
             tools:ignore="MissingConstraints" />
 
@@ -108,7 +69,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:text="Email"
-            app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
+            app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
             app:layout_constraintTop_toBottomOf="@+id/txtLastName" />
 
         <EditText
@@ -125,18 +86,22 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/linearLayout5"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="424dp"
+        android:layout_marginTop="276dp"
         android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <Button
             android:id="@+id/submitButton"
-            android:layout_width="match_parent"
+            android:layout_width="111dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
             android:text="Submit"
             tools:layout_editor_absoluteX="148dp"
             tools:layout_editor_absoluteY="447dp" />

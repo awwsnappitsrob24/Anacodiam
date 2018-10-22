@@ -7,7 +7,7 @@
         <item
             android:id="@+id/nav_edit_profile"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Edit Profile" />
+            android:title="Update Profile" />
 
         <item
             android:id="@+id/nav_view_profile"

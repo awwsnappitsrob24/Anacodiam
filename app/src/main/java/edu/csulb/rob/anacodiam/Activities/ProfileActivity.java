@@ -1,5 +1,6 @@
 package edu.csulb.rob.anacodiam.Activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -28,4 +29,11 @@ public class ProfileActivity extends AppCompatActivity {
         //String userLastName = extras.getString("LAST_NAME");
         //userFullName.setText(userFirstName + " " + userLastName);
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent homePageIntent = new Intent(this, HomepageActivity.class);
+        startActivity(homePageIntent);
+    }
+
 }

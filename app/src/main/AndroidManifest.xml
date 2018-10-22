@@ -29,7 +29,7 @@
             android:label="@string/title_activity_homepage"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activities.EditProfileActivity"
+            android:name=".Activities.CreateProfileActivity"
             android:label="@string/title_activity_profile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -45,7 +45,8 @@
             android:label="@string/title_activity_report"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activities.UserRegistrationActivity" />
-        <activity android:name=".Activities.ProfileActivity"></activity>
+        <activity android:name=".Activities.ProfileActivity" />
+        <activity android:name=".Activities.UpdateProfileActivity"></activity>
     </application>
 
 </manifest>

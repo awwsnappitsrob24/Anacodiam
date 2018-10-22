@@ -204,6 +204,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             focusView.requestFocus();
         } else {
             JsonObject jObj = new JsonObject();
+
             jObj.addProperty("email", mEmailView.getText().toString());
             jObj.addProperty("password", mPasswordView.getText().toString());
 
@@ -218,15 +219,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         JsonObject jObj = response.body().getAsJsonObject();
                         APIClient.setToken(jObj.get("token").getAsString());
 
-                        // do whatever you want here
-                        //Log.d("login", "SUCCESSFUL");
-
                         // start new intent here
                         Intent homepageIntent = new Intent(mSelf.getApplicationContext(), HomepageActivity.class);
                         startActivity(homepageIntent);
                     } else {
                         // Bad credentials
-                        //Log.d("login", "WRONG STUFF");
                         mEmailView.setError("Bad credentials!");
                         mPasswordView.setError("Bad credentials!");
                     }

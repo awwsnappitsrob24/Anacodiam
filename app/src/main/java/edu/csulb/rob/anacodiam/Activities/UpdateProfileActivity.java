@@ -12,34 +12,26 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
-import org.w3c.dom.Text;
-
 import edu.csulb.rob.anacodiam.Activities.API.APIClient;
 import edu.csulb.rob.anacodiam.Activities.API.ProfileService;
 import edu.csulb.rob.anacodiam.R;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class EditProfileActivity extends AppCompatActivity {
+public class UpdateProfileActivity extends AppCompatActivity {
 
     private ProfileService profileService;
-    private EditProfileActivity mSelf;
+    private UpdateProfileActivity mSelf;
 
-    TextView firstNameView, lastNameView;
-    EditText firstNameText, lastNameText;
+    TextView firstNameView, lastNameView, txtViewDOB;
+    EditText firstNameText, lastNameText, txtWeight, txtHeight1, txtHeight2, txtDOB;
+    Spinner genderSpinner, activitySpinner;
+    String genderValue = " ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_profile);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.activity_update_profile);
+        //Toolbar toolbar2 = (Toolbar) findViewById(R.id.toolbar2);
+        //setSupportActionBar(toolbar2);
 
         profileService = APIClient.getClient().create(ProfileService.class);
 
@@ -48,7 +40,8 @@ public class EditProfileActivity extends AppCompatActivity {
         lastNameView = (TextView) findViewById(R.id.txtViewLastName);
         firstNameText = (EditText) findViewById(R.id.txtFirstName);
         lastNameText = (EditText) findViewById(R.id.txtLastName);
-
+        txtViewDOB = (TextView) findViewById(R.id.txtViewDOB);
+        txtDOB = (EditText) findViewById(R.id.txtDOB);
 
         //Set up units spinner
         Spinner spinner = (Spinner) findViewById(R.id.spnWeightUnits);
@@ -61,7 +54,7 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                EditText txtWeight = (EditText) findViewById(R.id.txtWeight);
+                txtWeight = (EditText) findViewById(R.id.txtWeight);
 
                 if (txtWeight.getText() != null && txtWeight.getText().toString() != null && ! txtWeight.getText().toString().equals("")) {
 
@@ -100,8 +93,8 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                EditText txtHeight1 = (EditText) findViewById(R.id.txtHeight);
-                EditText txtHeight2 = (EditText) findViewById(R.id.txtHeight2);
+                txtHeight1 = (EditText) findViewById(R.id.txtHeight);
+                txtHeight2 = (EditText) findViewById(R.id.txtHeight2);
 
                 TextView txtViewHeight1 = (TextView) findViewById(R.id.txtViewHeightUnit1);
                 TextView txtViewHeight2 = (TextView) findViewById(R.id.txtViewHeightUnit2);
@@ -153,70 +146,94 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         //Set up gender spinner
-        spinner = (Spinner) findViewById(R.id.spnGender);
-
-        adapter = ArrayAdapter.createFromResource(this,
+        genderSpinner = (Spinner) findViewById(R.id.spnGender);
+        ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(this,
                 R.array.gender, android.R.layout.simple_spinner_dropdown_item);
+        genderSpinner.setAdapter(genderAdapter);
+        genderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                genderValue = adapterView.getItemAtPosition(i).toString();
+            }
 
-        spinner.setAdapter(adapter);
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         //Set up activity spinner
-        spinner = (Spinner) findViewById(R.id.spnActivity);
+        activitySpinner = (Spinner) findViewById(R.id.spnActivity);
 
-        adapter = ArrayAdapter.createFromResource(this,
+        ArrayAdapter<CharSequence> activityaAdapter = ArrayAdapter.createFromResource(this,
                 R.array.activity_level, android.R.layout.simple_spinner_dropdown_item);
 
-        spinner.setAdapter(adapter);
+        activitySpinner.setAdapter(activityaAdapter);
 
         Button submitButton = (Button) findViewById(R.id.submitButton);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Create Profile then go back to Homepage
-                createProfile();
+                updateProfile();
             }
         });
     }
 
-    public void createProfile() {
-        JsonObject jObj = new JsonObject();
+    // Update Profile here
+    public void updateProfile() {
+        /**
+         JsonObject jObj = new JsonObject();
 
-        // Call API and logout
-        mSelf = this;
-        Call<JsonElement> call = profileService.createprofile(RequestBody.create
-                (MediaType.parse("application/json"), jObj.toString()));
-        call.enqueue(new Callback<JsonElement>() {
-            @Override
-            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                if(response.isSuccessful()) {
-                    // Create profile then go to Profile page
-                    //JsonObject jObj = response.body().getAsJsonObject();
-                    //APIClient.setToken(jObj.get("token").getAsString());
-                    //Log.d("token", jObj.get("token").getAsString());
+         // Add properties from what the user entered
+         jObj.addProperty("first_name", firstNameText.getText().toString());
+         jObj.addProperty("last_name", lastNameText.getText().toString());
+         jObj.addProperty("weight", txtWeight.getText().toString());
+         jObj.addProperty("height", txtHeight1.getText().toString());
+         jObj.addProperty("gender", genderValue);
+         jObj.addProperty("dob", txtDOB.getText().toString());
 
-                    //String firstName = jObj.get("first_name").getAsString();
-                    //String lastName = jObj.get("last_name").getAsString();
-                    //jObj.addProperty("first_name", firstName);
-                    //jObj.addProperty("last_name", lastName);
+         Log.d("stuff", jObj.get("first_name").getAsString());
+         Log.d("stuff", jObj.get("last_name").getAsString());
+         Log.d("stuff", jObj.get("weight").getAsString());
+         Log.d("stuff", jObj.get("height").getAsString());
+         Log.d("stuff", jObj.get("gender").getAsString());
+         Log.d("stuff", jObj.get("dob").getAsString());
 
-                    Intent profileIntent = new Intent(mSelf.getApplicationContext(), ProfileActivity.class);
-                    //Bundle extras = new Bundle();
-                    //extras.putString("FIRST_NAME", firstName);
-                    //extras.putString("LAST_NAME",lastName);
-                    //profileIntent.putExtras(extras);
-                    startActivity(profileIntent);
-                    finish();
-                } else {
+         // Call API and logout
+         mSelf = this;
+         Call<JsonElement> call = profileService.createprofile(RequestBody.create
+         (MediaType.parse("application/json"), jObj.toString()));
+         call.enqueue(new Callback<JsonElement>() {
+        @Override
+        public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+        if(response.isSuccessful()) {
+        // Create profile then go to Profile page
+        JsonObject jObj = response.body().getAsJsonObject();
+        ProfileAPI.setToken(jObj.get("token").getAsString());
 
-                }
-            }
+        Intent profileIntent = new Intent(mSelf.getApplicationContext(), ProfileActivity.class);
+        Bundle extras = new Bundle();
+        extras.putString("FIRST_NAME", jObj.get("first_name").getAsString());
+        extras.putString("LAST_NAME",jObj.get("last_name").getAsString());
+        profileIntent.putExtras(extras);
+        startActivity(profileIntent);
+        finish();
+        } else {
 
-            @Override
-            public void onFailure(Call<JsonElement> call, Throwable t) {
-                call.cancel();
-            }
+        }
+        }
+
+        @Override
+        public void onFailure(Call<JsonElement> call, Throwable t) {
+        call.cancel();
+        }
         });
+         **/
+        mSelf = this;
+        Intent homePageIntent = new Intent(mSelf.getApplicationContext(), HomepageActivity.class);
+        startActivity(homePageIntent);
+        finish();
     }
 
 }
-

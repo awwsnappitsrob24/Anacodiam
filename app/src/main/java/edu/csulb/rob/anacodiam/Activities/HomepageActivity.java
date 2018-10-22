@@ -15,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -166,8 +165,8 @@ public class HomepageActivity extends AppCompatActivity
 
         if (id == R.id.nav_edit_profile) {
             // GO TO EDIT PROFILE PAGE
-            Intent editProfileIntent = new Intent(this, EditProfileActivity.class);
-            startActivity(editProfileIntent);
+            Intent updateProfileIntent = new Intent(this, UpdateProfileActivity.class);
+            startActivity(updateProfileIntent);
         } else if (id == R.id.nav_view_profile) {
             // GO TO PROFILE PAGE, bring the user's name with it
             Intent viewProfileIntent = new Intent(this, ProfileActivity.class);

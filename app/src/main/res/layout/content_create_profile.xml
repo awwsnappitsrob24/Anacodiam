@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".Activities.EditProfileActivity"
-    tools:showIn="@layout/activity_edit_profile">
+    tools:context=".Activities.CreateProfileActivity"
+    tools:showIn="@layout/activity_create_profile">
 
     <ScrollView
         android:layout_width="0dp"
@@ -42,9 +42,9 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:inputType="textPersonName"
-                app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtViewFirstName"
+                app:layout_constraintTop_toBottomOf="@+id/txtViewPassword"
                 tools:ignore="MissingConstraints" />
 
             <TextView
@@ -54,8 +54,8 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Last Name"
-                app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
-                app:layout_constraintTop_toBottomOf="@+id/txtFirstName" />
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
+                app:layout_constraintTop_toBottomOf="@+id/txtPassword" />
 
             <EditText
                 android:id="@+id/txtLastName"
@@ -66,8 +66,8 @@
                 android:ems="10"
                 android:inputType="textPersonName"
                 app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
-                app:layout_constraintRight_toRightOf="@+id/txtFirstName"
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
+                app:layout_constraintRight_toRightOf="@+id/txtPassword"
                 app:layout_constraintTop_toBottomOf="@+id/txtViewLastName"
                 tools:ignore="MissingConstraints" />
 
@@ -78,7 +78,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Weight"
-                app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
                 app:layout_constraintTop_toBottomOf="@+id/txtLastName" />
 
             <LinearLayout
@@ -119,7 +119,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:text="Height"
-                app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
+                app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
                 app:layout_constraintTop_toBottomOf="@+id/txtWeight" />
 
             <LinearLayout
@@ -136,7 +136,7 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:inputType="textPersonName"
-                    app:layout_constraintLeft_toLeftOf="@+id/txtViewFirstName"
+                    app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
                     app:layout_constraintTop_toBottomOf="@+id/txtViewHeight" />
 
                 <TextView
@@ -221,26 +221,25 @@
                 app:layout_constraintTop_toBottomOf="@+id/txtViewActivity" />
 
             <TextView
-                android:id="@+id/txtViewAge"
+                android:id="@+id/txtViewDOB"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Age"
+                android:text="Date of Birth (Year-Month-Day)"
                 app:layout_constraintLeft_toLeftOf="@+id/spnActivity"
                 app:layout_constraintTop_toBottomOf="@+id/spnActivity" />
 
             <EditText
-                android:id="@+id/txtAge"
-                android:layout_width="match_parent"
+                android:id="@+id/txtDOB"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:layout_marginRight="100dp"
                 android:layout_marginTop="8dp"
+                android:layout_weight="1"
                 android:ems="10"
-                android:inputType="number"
-                app:layout_constraintLeft_toLeftOf="@+id/txtViewAge"
-                app:layout_constraintTop_toBottomOf="@+id/txtViewAge" />
+                app:layout_constraintBottom_toBottomOf="@+id/txtViewDOB"
+                app:layout_constraintLeft_toRightOf="@+id/txtViewDOB" />
 
             <Button
                 android:id="@+id/submitButton"

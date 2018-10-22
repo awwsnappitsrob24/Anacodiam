@@ -39,15 +39,11 @@ public class UserRegistrationActivity extends AppCompatActivity {
 
         authenticationService = APIClient.getClient().create(AuthenticationService.class);
 
-        firstNameView = (TextView) findViewById(R.id.txtViewFirstName);
-        lastNameView = (TextView) findViewById(R.id.txtViewLastName);
-        passwordView = (TextView) findViewById(R.id.txtViewFirstName);
+        passwordView = (TextView) findViewById(R.id.txtViewPassword);
         confirmPasswordView = (TextView) findViewById(R.id.txtViewLastName);
         emailView = (TextView) findViewById(R.id.txtViewWeight);
 
-        firstNameText = (EditText) findViewById(R.id.txtFirstName);
-        lastNameText = (EditText) findViewById(R.id.txtLastName);
-        passwordText = (EditText) findViewById(R.id.txtFirstName);
+        passwordText = (EditText) findViewById(R.id.txtPassword);
         confirmPasswordText = (EditText) findViewById(R.id.txtLastName);
         emailText = (EditText) findViewById(R.id.txtWeight);
 
@@ -67,33 +63,17 @@ public class UserRegistrationActivity extends AppCompatActivity {
      */
     private void attemptRegistration() {
         // Reset errors.
-        firstNameView.setError(null);
-        lastNameView.setError(null);
         passwordView.setError(null);
         confirmPasswordView.setError(null);
         emailView.setError(null);
 
         // Store values at the time of the registration attempt.
-        String fName = firstNameText.getText().toString();
-        String lName = lastNameText.getText().toString();
         String password = passwordText.getText().toString();
         String confirmPassword = confirmPasswordText.getText().toString();
         String email = emailText.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
-
-        // Check if the user entered a name (field is required)
-        if(TextUtils.isEmpty(fName)) {
-            firstNameView.setError(getString(R.string.error_field_required));
-            focusView = firstNameView;
-            cancel = true;
-        }
-        if (TextUtils.isEmpty(lName)) {
-            lastNameView.setError(getString(R.string.error_field_required));
-            focusView = lastNameView;
-            cancel = true;
-        }
 
         // Check for a valid password, if the user entered one.
         if(TextUtils.isEmpty(password)) {
@@ -136,8 +116,6 @@ public class UserRegistrationActivity extends AppCompatActivity {
         } else {
             // Add user's info as properties of the JsonObject
             JsonObject jObj = new JsonObject();
-            jObj.addProperty("first_name", fName);
-            jObj.addProperty("last_name", lName);
             jObj.addProperty("password1", password);
             jObj.addProperty("password2", confirmPassword);
             jObj.addProperty("email", email);
@@ -156,12 +134,11 @@ public class UserRegistrationActivity extends AppCompatActivity {
                         JsonObject jObj = response.body().getAsJsonObject();
                         APIClient.setToken(jObj.get("token").getAsString());
 
-                        Log.d("tokenstring", jObj.get("token").getAsString());
-
-                        Intent homepageIntent = new Intent(mSelf.getApplicationContext(), HomepageActivity.class);
-                        startActivity(homepageIntent);
+                        Intent createProfileIntent = new Intent(mSelf.getApplicationContext(),
+                                CreateProfileActivity.class);
+                        startActivity(createProfileIntent);
                     } else {
-                        //Log.d("Response", "Didn't work. SORRY!");
+                        Log.d("Response", "Didn't work. SORRY!");
                     }
                 }
 
