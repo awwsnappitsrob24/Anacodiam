@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,9 +13,18 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import edu.csulb.rob.anacodiam.Activities.API.APIClient;
+import edu.csulb.rob.anacodiam.Activities.API.ProfileAPI;
 import edu.csulb.rob.anacodiam.Activities.API.ProfileService;
 import edu.csulb.rob.anacodiam.R;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CreateProfileActivity extends AppCompatActivity {
 
@@ -32,8 +42,6 @@ public class CreateProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        profileService = APIClient.getClient().create(ProfileService.class);
 
 
         firstNameView = (TextView) findViewById(R.id.txtViewFirstName);
@@ -170,6 +178,7 @@ public class CreateProfileActivity extends AppCompatActivity {
 
         activitySpinner.setAdapter(activityaAdapter);
 
+
         Button submitButton = (Button) findViewById(R.id.submitButton);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,11 +187,12 @@ public class CreateProfileActivity extends AppCompatActivity {
                 createProfile();
             }
         });
+
+        profileService = ProfileAPI.getClient().create(ProfileService.class);
     }
 
     // Create Profile here
     public void createProfile() {
-        /**
         JsonObject jObj = new JsonObject();
 
         // Add properties from what the user entered
@@ -193,15 +203,9 @@ public class CreateProfileActivity extends AppCompatActivity {
         jObj.addProperty("gender", genderValue);
         jObj.addProperty("dob", txtDOB.getText().toString());
 
-        Log.d("stuff", jObj.get("first_name").getAsString());
-        Log.d("stuff", jObj.get("last_name").getAsString());
-        Log.d("stuff", jObj.get("weight").getAsString());
-        Log.d("stuff", jObj.get("height").getAsString());
-        Log.d("stuff", jObj.get("gender").getAsString());
-        Log.d("stuff", jObj.get("dob").getAsString());
-
-        // Call API and logout
+        // Call API and create profile
         mSelf = this;
+        ProfileAPI.setToken(UserRegistrationActivity.myToken);
         Call<JsonElement> call = profileService.createprofile(RequestBody.create
                 (MediaType.parse("application/json"), jObj.toString()));
         call.enqueue(new Callback<JsonElement>() {
@@ -210,17 +214,18 @@ public class CreateProfileActivity extends AppCompatActivity {
                 if(response.isSuccessful()) {
                     // Create profile then go to Profile page
                     JsonObject jObj = response.body().getAsJsonObject();
-                    ProfileAPI.setToken(jObj.get("token").getAsString());
+                    Log.d("worked", "worked");
+
 
                     Intent profileIntent = new Intent(mSelf.getApplicationContext(), ProfileActivity.class);
-                    Bundle extras = new Bundle();
-                    extras.putString("FIRST_NAME", jObj.get("first_name").getAsString());
-                    extras.putString("LAST_NAME",jObj.get("last_name").getAsString());
-                    profileIntent.putExtras(extras);
+                   // Bundle extras = new Bundle();
+                    //extras.putString("FIRST_NAME", jObj.get("first_name").getAsString());
+                   // extras.putString("LAST_NAME",jObj.get("last_name").getAsString());
+                    //profileIntent.putExtras(extras);
                     startActivity(profileIntent);
                     finish();
                 } else {
-
+                    Log.d("worked", "nope");
                 }
             }
 
@@ -229,11 +234,11 @@ public class CreateProfileActivity extends AppCompatActivity {
                 call.cancel();
             }
         });
-         **/
-        mSelf = this;
-        Intent homePageIntent = new Intent(mSelf.getApplicationContext(), HomepageActivity.class);
-        startActivity(homePageIntent);
-        finish();
+
+        //mSelf = this;
+        //Intent homePageIntent = new Intent(mSelf.getApplicationContext(), HomepageActivity.class);
+        //startActivity(homePageIntent);
+        //finish();
     }
 
 }

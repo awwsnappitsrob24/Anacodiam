@@ -28,6 +28,8 @@ public class UserRegistrationActivity extends AppCompatActivity {
     private EditText firstNameText, lastNameText, passwordText, confirmPasswordText, emailText;
     private Button submitButton;
 
+    static String myToken = "";
+
     private AuthenticationService authenticationService;
 
     private UserRegistrationActivity mSelf;
@@ -133,6 +135,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
 
                         JsonObject jObj = response.body().getAsJsonObject();
                         APIClient.setToken(jObj.get("token").getAsString());
+                        myToken = jObj.get("token").getAsString();
 
                         Intent createProfileIntent = new Intent(mSelf.getApplicationContext(),
                                 CreateProfileActivity.class);

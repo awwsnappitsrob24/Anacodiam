@@ -1,5 +1,7 @@
 package edu.csulb.rob.anacodiam.Activities.API;
 
+import android.util.Log;
+
 import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -31,6 +33,7 @@ public class APIClient {
                     .header("Authorization", mToken)
                     .method(original.method(), original.body())
                     .build();
+
 
             return chain.proceed(request);
         });

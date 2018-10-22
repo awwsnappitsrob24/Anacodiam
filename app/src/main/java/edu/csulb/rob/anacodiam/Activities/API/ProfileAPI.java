@@ -1,5 +1,7 @@
 package edu.csulb.rob.anacodiam.Activities.API;
 
+import android.util.Log;
+
 import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -27,10 +29,11 @@ public class ProfileAPI {
             Request original = chain.request();
 
             Request request = original.newBuilder()
-                    .header("Authorization", "JWT" + mToken)
+                    .header("Authorization", "JWT " + mToken)
                     //.header("Authorization", mToken)
                     .method(original.method(), original.body())
                     .build();
+
 
             return chain.proceed(request);
         });

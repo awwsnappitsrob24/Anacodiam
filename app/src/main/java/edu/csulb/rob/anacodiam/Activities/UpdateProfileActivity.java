@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,9 +13,18 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import edu.csulb.rob.anacodiam.Activities.API.APIClient;
+import edu.csulb.rob.anacodiam.Activities.API.ProfileAPI;
 import edu.csulb.rob.anacodiam.Activities.API.ProfileService;
 import edu.csulb.rob.anacodiam.R;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class UpdateProfileActivity extends AppCompatActivity {
 
@@ -33,7 +43,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
         //Toolbar toolbar2 = (Toolbar) findViewById(R.id.toolbar2);
         //setSupportActionBar(toolbar2);
 
-        profileService = APIClient.getClient().create(ProfileService.class);
+        profileService = ProfileAPI.getClient().create(ProfileService.class);
 
 
         firstNameView = (TextView) findViewById(R.id.txtViewFirstName);
@@ -182,7 +192,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
 
     // Update Profile here
     public void updateProfile() {
-        /**
+
          JsonObject jObj = new JsonObject();
 
          // Add properties from what the user entered
@@ -213,10 +223,10 @@ public class UpdateProfileActivity extends AppCompatActivity {
         ProfileAPI.setToken(jObj.get("token").getAsString());
 
         Intent profileIntent = new Intent(mSelf.getApplicationContext(), ProfileActivity.class);
-        Bundle extras = new Bundle();
-        extras.putString("FIRST_NAME", jObj.get("first_name").getAsString());
-        extras.putString("LAST_NAME",jObj.get("last_name").getAsString());
-        profileIntent.putExtras(extras);
+        //Bundle extras = new Bundle();
+        //extras.putString("FIRST_NAME", jObj.get("first_name").getAsString());
+       // extras.putString("LAST_NAME",jObj.get("last_name").getAsString());
+       //profileIntent.putExtras(extras);
         startActivity(profileIntent);
         finish();
         } else {
@@ -229,7 +239,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
         call.cancel();
         }
         });
-         **/
+
         mSelf = this;
         Intent homePageIntent = new Intent(mSelf.getApplicationContext(), HomepageActivity.class);
         startActivity(homePageIntent);
