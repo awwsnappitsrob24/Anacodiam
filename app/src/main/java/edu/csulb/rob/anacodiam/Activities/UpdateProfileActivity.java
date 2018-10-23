@@ -3,7 +3,6 @@ package edu.csulb.rob.anacodiam.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,7 +16,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import edu.csulb.rob.anacodiam.Activities.API.APIClient;
-import edu.csulb.rob.anacodiam.Activities.API.ProfileAPI;
 import edu.csulb.rob.anacodiam.Activities.API.ProfileService;
 import edu.csulb.rob.anacodiam.R;
 import okhttp3.MediaType;
@@ -43,7 +41,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
         //Toolbar toolbar2 = (Toolbar) findViewById(R.id.toolbar2);
         //setSupportActionBar(toolbar2);
 
-        profileService = ProfileAPI.getClient().create(ProfileService.class);
+        profileService = APIClient.getClient().create(ProfileService.class);
 
 
         firstNameView = (TextView) findViewById(R.id.txtViewFirstName);
@@ -220,7 +218,6 @@ public class UpdateProfileActivity extends AppCompatActivity {
         if(response.isSuccessful()) {
         // Create profile then go to Profile page
         JsonObject jObj = response.body().getAsJsonObject();
-        ProfileAPI.setToken(jObj.get("token").getAsString());
 
         Intent profileIntent = new Intent(mSelf.getApplicationContext(), ProfileActivity.class);
         //Bundle extras = new Bundle();

@@ -28,11 +28,12 @@ public class APIClient {
         builder.addInterceptor(chain -> {
             Request original = chain.request();
 
-            Request request = original.newBuilder()
+            Request.Builder bRequest = original.newBuilder();
                     //.header("Authorization", "JWT" + mToken)
-                    .header("Authorization", mToken)
-                    .method(original.method(), original.body())
-                    .build();
+            if (!mToken.equals("")) {
+                bRequest.header("Authorization", "JWT " + mToken);
+            }
+            Request request = bRequest.method(original.method(), original.body()).build();
 
 
             return chain.proceed(request);
@@ -42,9 +43,9 @@ public class APIClient {
 
         retrofit = new Retrofit.Builder()
 //                .baseUrl("http://10.39.103.87:8000/api/")
-                .baseUrl("http://192.168.0.126:8000/api/")
+//                .baseUrl("http://192.168.0.126:8000/api/")
 //                .baseUrl("http://192.168.99.100:8000/api/") //from postman
-//                .baseUrl("http://10.0.2.2:8000/api/") // for emulator
+                .baseUrl("http://10.0.2.2:8000/api/") // for emulator
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();

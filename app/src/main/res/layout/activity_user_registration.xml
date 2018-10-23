@@ -33,6 +33,7 @@
             android:layout_marginTop="8dp"
             android:ems="10"
             android:inputType="textPassword"
+            android:text="12qw34er56ty"
             app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtViewPassword"
@@ -56,6 +57,7 @@
             android:layout_marginTop="8dp"
             android:ems="10"
             android:inputType="textPassword"
+            android:text="12qw34er56ty"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintLeft_toLeftOf="@+id/txtViewPassword"
             app:layout_constraintRight_toRightOf="@+id/txtPassword"
@@ -80,6 +82,7 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:ems="10"
+            android:text="toto@gmail.com"
             app:layout_constraintLeft_toLeftOf="@+id/txtLastName"
             app:layout_constraintTop_toBottomOf="@+id/txtViewWeight"
             tools:layout_weight="2" />
