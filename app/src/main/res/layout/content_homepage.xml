@@ -11,14 +11,13 @@
     <TextView
         android:id="@+id/suggestedCaloriesNumView"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="50dp"
         android:layout_marginStart="46dp"
         android:layout_marginLeft="46dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:gravity="center_vertical|center_horizontal"
         android:textAppearance="@android:style/TextAppearance.Large"
-        app:layout_constraintBottom_toBottomOf="@+id/caloriesConsumedNumView"
         app:layout_constraintEnd_toStartOf="@+id/caloriesConsumedNumView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/suggestedCaloriesView" />
@@ -72,16 +71,51 @@
     <TextView
         android:id="@+id/caloriesConsumedNumView"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="50dp"
         android:layout_marginEnd="38dp"
         android:layout_marginRight="38dp"
-        android:layout_marginBottom="164dp"
         android:gravity="center_vertical|center_horizontal"
         android:textAppearance="@android:style/TextAppearance.Large"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/suggestedCaloriesNumView"
         app:layout_constraintTop_toBottomOf="@+id/caloriesConsumedView" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/suggestedCaloriesNumView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/suggestedCaloriesNumView">
+
+            <TextView
+                android:id="@+id/editTxtCalorieList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </ScrollView>
 
 
 </android.support.constraint.ConstraintLayout>

@@ -1,8 +1,11 @@
 package edu.csulb.rob.anacodiam.Activities;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -14,6 +17,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.JsonElement;
@@ -30,6 +36,12 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import android.app.AlertDialog;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class HomepageActivity extends AppCompatActivity
@@ -40,6 +52,11 @@ public class HomepageActivity extends AppCompatActivity
 
     private TextView suggestedCaloriesView, caloriesConsumedView, suggestedCaloriesNumView,
         caloriesConsumedNumView;
+
+    CalorieData calorieData = new CalorieData();
+
+    // Initialize both calorie text views to 0 and add to them as you go
+    int caloriesConsumed = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,23 +70,89 @@ public class HomepageActivity extends AppCompatActivity
         caloriesConsumedView = (TextView) findViewById(R.id.caloriesConsumedView);
         caloriesConsumedNumView = (TextView) findViewById(R.id.caloriesConsumedNumView);
 
+        caloriesConsumedNumView.setGravity(Gravity.CENTER_HORIZONTAL);
+        caloriesConsumedNumView.setTextSize(40);
+        caloriesConsumedNumView.setText(Integer.toString(caloriesConsumed));
+
+        suggestedCaloriesNumView.setGravity(Gravity.CENTER_HORIZONTAL);
+        suggestedCaloriesNumView.setTextSize(40);
+        suggestedCaloriesNumView.setText("3,250");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_calories);
         fab.setOnClickListener(new View.OnClickListener() {
-            // Initialize both calorie text views to 0 and add to them as you go
-            int caloriesConsumed = 0;
 
             @Override
             public void onClick(View view) {
-                // Add calories manually here
-                //caloriesConsumed += caloriesConsumed;
-                caloriesConsumedNumView.setGravity(Gravity.CENTER_HORIZONTAL);
-                caloriesConsumedNumView.setTextSize(50);
-                caloriesConsumedNumView.setText("2,000");
+                //Build an alert dialog where the user can enter the amount of calories ingested.
+                AlertDialog.Builder builder = new AlertDialog.Builder(HomepageActivity.this);
+                builder.setTitle("Calorie Input");
 
-                suggestedCaloriesNumView.setGravity(Gravity.CENTER_HORIZONTAL);
-                suggestedCaloriesNumView.setTextSize(50);
-                suggestedCaloriesNumView.setText("3,250");
+                Context context = view.getContext();
+                LinearLayout layout = new LinearLayout(context);
+                layout.setOrientation(LinearLayout.VERTICAL);
+
+                //Add Food Name Fields
+                final TextView txtFoodName = new TextView (HomepageActivity.this);
+                txtFoodName.setText("Food:");
+                txtFoodName.setTextSize(20);
+                layout.addView(txtFoodName);
+
+                final EditText editTextFoodName = new EditText(HomepageActivity.this);
+                editTextFoodName.setInputType(InputType.TYPE_CLASS_TEXT);
+                layout.addView(editTextFoodName);
+
+                //Add Calorie Fields
+                final TextView txtCalories = new TextView (HomepageActivity.this);
+                txtCalories.setText("Calories:");
+                txtCalories.setTextSize(20);
+                layout.addView(txtCalories);
+
+                final EditText editTextCalories = new EditText(HomepageActivity.this);
+                editTextCalories.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_NUMBER);
+                layout.addView(editTextCalories);
+
+                //Add Date Fields
+                final TextView txtDate = new TextView (HomepageActivity.this);
+                txtDate.setText("Date:");
+                txtDate.setTextSize(20);
+                layout.addView(txtDate);
+
+                final DatePicker pckDate = new DatePicker(HomepageActivity.this);
+                pckDate.setPadding(32, 8, 32, 0);
+                pckDate.setScaleX(0.9f);
+                pckDate.setScaleY(0.9f);
+                layout.addView(pckDate);
+
+                builder.setView(layout);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Get value from date picker
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(pckDate.getYear(), pckDate.getMonth(), pckDate.getDayOfMonth());
+
+
+                        Integer calorieInteger = new Integer(editTextCalories.getText().toString());
+                        calorieData.addFood(editTextFoodName.getText().toString(), calorieInteger, calendar.getTime());
+
+                        caloriesConsumed += calorieInteger.intValue();
+                        caloriesConsumedNumView.setText(Integer.toString(caloriesConsumed));
+
+
+
+                        TextView calorieList = (TextView) findViewById(R.id.editTxtCalorieList);
+                        calorieList.setText(calorieData.toString());
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
             }
         });
 
@@ -95,6 +178,56 @@ public class HomepageActivity extends AppCompatActivity
                 new DataPoint(4, 6)
         });
         graph.addSeries(series);
+    }
+
+    //A container to hold data for each food.
+    private class CalorieData{
+
+        private ArrayList<String> name;
+        private ArrayList<Integer> calories;
+        private ArrayList<Date> dates;
+
+        public CalorieData(){
+            name = new ArrayList<String>();
+            calories = new ArrayList<Integer>();
+            dates = new ArrayList<Date>();
+        }
+
+        public String getName(int index){
+            return name.get(index);
+        }
+
+        public int getCalories(int index){
+            return calories.get(index);
+        }
+
+        public Date getDate(int index){
+            return dates.get(index);
+        }
+
+        public void addFood(String inputName, int inputCalories, Date inputDate){
+            name.add(inputName);
+            calories.add(inputCalories);
+            dates.add(inputDate);
+        }
+
+        public void removeFood(int index){
+            name.remove(index);
+            calories.remove(index);
+            dates.remove(index);
+        }
+
+        public String toString(){
+            String returnString = "";
+
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+
+            for(int i = 0; i < name.size(); i++){
+                returnString = returnString + sdf.format(dates.get(i)) + ":  " + name.get(i) + "  --  " + calories.get(i) + " calories\n";
+            }
+
+            return returnString.substring(0, returnString.length() - 1);
+        }
     }
 
     @Override
