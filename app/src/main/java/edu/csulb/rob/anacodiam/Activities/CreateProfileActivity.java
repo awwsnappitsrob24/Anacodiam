@@ -17,7 +17,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import edu.csulb.rob.anacodiam.Activities.API.APIClient;
-import edu.csulb.rob.anacodiam.Activities.API.ProfileAPI;
 import edu.csulb.rob.anacodiam.Activities.API.ProfileService;
 import edu.csulb.rob.anacodiam.R;
 import okhttp3.MediaType;
@@ -188,7 +187,7 @@ public class CreateProfileActivity extends AppCompatActivity {
             }
         });
 
-        profileService = ProfileAPI.getClient().create(ProfileService.class);
+        profileService = APIClient.getClient().create(ProfileService.class);
     }
 
     // Create Profile here
@@ -200,12 +199,11 @@ public class CreateProfileActivity extends AppCompatActivity {
         jObj.addProperty("last_name", lastNameText.getText().toString());
         jObj.addProperty("weight", txtWeight.getText().toString());
         jObj.addProperty("height", txtHeight1.getText().toString());
-        jObj.addProperty("gender", genderValue);
+        jObj.addProperty("gender", genderValue.charAt(0));
         jObj.addProperty("dob", txtDOB.getText().toString());
 
         // Call API and create profile
         mSelf = this;
-        ProfileAPI.setToken(UserRegistrationActivity.myToken);
         Call<JsonElement> call = profileService.createprofile(RequestBody.create
                 (MediaType.parse("application/json"), jObj.toString()));
         call.enqueue(new Callback<JsonElement>() {
