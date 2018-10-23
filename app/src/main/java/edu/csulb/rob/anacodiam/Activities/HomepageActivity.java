@@ -30,6 +30,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import edu.csulb.rob.anacodiam.Activities.API.APIClient;
 import edu.csulb.rob.anacodiam.Activities.API.AuthenticationService;
+import edu.csulb.rob.anacodiam.Activities.API.ProfileService;
 import edu.csulb.rob.anacodiam.R;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -48,6 +49,7 @@ public class HomepageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private AuthenticationService authenticationService;
+    private ProfileService profileService;
     private HomepageActivity mSelf;
 
     private TextView suggestedCaloriesView, caloriesConsumedView, suggestedCaloriesNumView,
@@ -58,12 +60,17 @@ public class HomepageActivity extends AppCompatActivity
     // Initialize both calorie text views to 0 and add to them as you go
     int caloriesConsumed = 0;
 
+    // Need to be calculated
+    double caloriesSuggested = 0, bmr = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navdrawer_homepage);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        profileService = APIClient.getClient().create(ProfileService.class);
 
         suggestedCaloriesView = (TextView) findViewById(R.id.suggestedCaloriesView);
         suggestedCaloriesNumView = (TextView) findViewById(R.id.suggestedCaloriesNumView);
@@ -76,7 +83,10 @@ public class HomepageActivity extends AppCompatActivity
 
         suggestedCaloriesNumView.setGravity(Gravity.CENTER_HORIZONTAL);
         suggestedCaloriesNumView.setTextSize(40);
-        suggestedCaloriesNumView.setText("3,250");
+        // change this number based on the user's profile (use get profile and get their w
+        // eight, height,age, gender, and activity level)
+        //suggestedCaloriesNumView.setText("3,250");
+        //suggestedCaloriesNumView.setText(BMRtoString());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_calories);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -178,7 +188,65 @@ public class HomepageActivity extends AppCompatActivity
                 new DataPoint(4, 6)
         });
         graph.addSeries(series);
+
+        // Calculate BMR
+        JsonObject jObj = new JsonObject();
+
+        // Call API and get user's profile
+        mSelf = this;
+        Call<JsonElement> call = profileService.getprofile();
+        call.enqueue(new Callback<JsonElement>() {
+            int weightInPounds, height, age;
+            double weightInKilograms;
+            String gender;
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                if(response.isSuccessful()) {
+                    // Get profile and get the user's info
+                    JsonObject jObj = response.body().getAsJsonObject();
+                    Log.d("bmr", "worked");
+
+                    weightInPounds = jObj.get("weight").getAsInt();
+                    height = jObj.get("height").getAsInt();
+                    gender = jObj.get("gender").getAsString();
+                    age = jObj.get("age").getAsInt();
+                    weightInKilograms = weightInPounds / 2.205;
+
+                    if(gender.equals("M")) {
+                        bmr = (10 * weightInKilograms) + (6.25 * height) - (5 * age) + 5;
+                    } else if(gender.equals("F")) {
+                        bmr = (10 * weightInKilograms) + (6.25 * height) - (5 * age) - 161;
+                    }
+
+                    Log.d("BMR", Double.toString(bmr));
+                    Log.d("level", CreateProfileActivity.activityValue);
+
+                    int roundedCalorieSuggestion;
+                    if(CreateProfileActivity.activityValue.equals("Sedentary")) {
+                        roundedCalorieSuggestion = (int) Math.round(bmr * 1.53);
+                        suggestedCaloriesNumView.setText(Integer.toString(roundedCalorieSuggestion));
+                    } else if(CreateProfileActivity.activityValue.equals("Mildly Active")) {
+                        roundedCalorieSuggestion = (int) Math.round(bmr * 1.76);
+                        suggestedCaloriesNumView.setText(Integer.toString(roundedCalorieSuggestion));
+                    } else if(CreateProfileActivity.activityValue.equals("Very Active")) {
+                        roundedCalorieSuggestion = (int) Math.round(bmr * 2.25);
+                        suggestedCaloriesNumView.setText(Integer.toString(roundedCalorieSuggestion));
+                    }
+
+
+
+                } else {
+                    Log.d("bmr", "nope");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+                call.cancel();
+            }
+        });
     }
+
 
     //A container to hold data for each food.
     private class CalorieData{

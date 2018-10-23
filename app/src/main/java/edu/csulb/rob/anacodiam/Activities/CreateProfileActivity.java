@@ -34,6 +34,7 @@ public class CreateProfileActivity extends AppCompatActivity {
     EditText firstNameText, lastNameText, txtWeight, txtHeight1, txtHeight2, txtDOB;
     Spinner genderSpinner, activitySpinner;
     String genderValue = " ";
+    static String activityValue = " ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +177,17 @@ public class CreateProfileActivity extends AppCompatActivity {
                 R.array.activity_level, android.R.layout.simple_spinner_dropdown_item);
 
         activitySpinner.setAdapter(activityaAdapter);
+        activitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                activityValue = adapterView.getItemAtPosition(i).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
 
         Button submitButton = (Button) findViewById(R.id.submitButton);
@@ -215,7 +227,7 @@ public class CreateProfileActivity extends AppCompatActivity {
                     Log.d("worked", "worked");
 
 
-                    Intent profileIntent = new Intent(mSelf.getApplicationContext(), ProfileActivity.class);
+                    Intent profileIntent = new Intent(mSelf.getApplicationContext(), HomepageActivity.class);
                    // Bundle extras = new Bundle();
                     //extras.putString("FIRST_NAME", jObj.get("first_name").getAsString());
                    // extras.putString("LAST_NAME",jObj.get("last_name").getAsString());
