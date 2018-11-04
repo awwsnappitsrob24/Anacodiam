@@ -222,6 +222,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         // start new intent here
                         Intent homepageIntent = new Intent(mSelf.getApplicationContext(), HomepageActivity.class);
                         startActivity(homepageIntent);
+                        finish();
                     } else {
                         // Bad credentials
                         mEmailView.setError("Bad credentials!");

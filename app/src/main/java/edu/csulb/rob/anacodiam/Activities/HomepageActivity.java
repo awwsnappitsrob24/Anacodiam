@@ -1,13 +1,18 @@
 package edu.csulb.rob.anacodiam.Activities;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,11 +22,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.jjoe64.graphview.GraphView;
@@ -30,6 +43,8 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import edu.csulb.rob.anacodiam.Activities.API.APIClient;
 import edu.csulb.rob.anacodiam.Activities.API.AuthenticationService;
+import edu.csulb.rob.anacodiam.Activities.API.CalorieService;
+import edu.csulb.rob.anacodiam.Activities.API.NutritionixAPISearch;
 import edu.csulb.rob.anacodiam.Activities.API.ProfileService;
 import edu.csulb.rob.anacodiam.R;
 import okhttp3.MediaType;
@@ -38,11 +53,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import android.app.AlertDialog;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 
 
 public class HomepageActivity extends AppCompatActivity
@@ -50,18 +67,25 @@ public class HomepageActivity extends AppCompatActivity
 
     private AuthenticationService authenticationService;
     private ProfileService profileService;
+    private CalorieService calorieService1, calorieService2;
     private HomepageActivity mSelf;
-
     private TextView suggestedCaloriesView, caloriesConsumedView, suggestedCaloriesNumView,
         caloriesConsumedNumView;
+    private EditText searchEditText;
+    private TextView textFoodCalories;
+    private ListView foodListView;
+    private SearchView mySearchView;
+    private ArrayList<Food> foodArrayList;
+    private CustomFoodAdapter foodAdapter;
+    private Food selectedFood;
 
     CalorieData calorieData = new CalorieData();
 
     // Initialize both calorie text views to 0 and add to them as you go
-    int caloriesConsumed = 0;
+
 
     // Need to be calculated
-    double caloriesSuggested = 0, bmr = 0;
+    double caloriesSuggested = 0, bmr = 0, foodCalories = 0, caloriesConsumed = 0;;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,14 +103,13 @@ public class HomepageActivity extends AppCompatActivity
 
         caloriesConsumedNumView.setGravity(Gravity.CENTER_HORIZONTAL);
         caloriesConsumedNumView.setTextSize(40);
-        caloriesConsumedNumView.setText(Integer.toString(caloriesConsumed));
+        caloriesConsumedNumView.setText(Double.toString(caloriesConsumed));
 
         suggestedCaloriesNumView.setGravity(Gravity.CENTER_HORIZONTAL);
         suggestedCaloriesNumView.setTextSize(40);
-        // change this number based on the user's profile (use get profile and get their w
-        // eight, height,age, gender, and activity level)
-        //suggestedCaloriesNumView.setText("3,250");
-        //suggestedCaloriesNumView.setText(BMRtoString());
+
+        calorieService1 = NutritionixAPISearch.getClient().create(CalorieService.class);
+        calorieService2 = APIClient.getClient().create(CalorieService.class);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_calories);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -107,9 +130,183 @@ public class HomepageActivity extends AppCompatActivity
                 txtFoodName.setTextSize(20);
                 layout.addView(txtFoodName);
 
-                final EditText editTextFoodName = new EditText(HomepageActivity.this);
-                editTextFoodName.setInputType(InputType.TYPE_CLASS_TEXT);
-                layout.addView(editTextFoodName);
+                // Add food user entry
+                mySearchView = new SearchView(getApplicationContext());
+                mySearchView.setInputType(InputType.TYPE_CLASS_TEXT);
+                int searchSrcTextId = getResources().getIdentifier("android:id/search_src_text",
+                        null, null);
+                searchEditText = (EditText) mySearchView.findViewById(searchSrcTextId);
+                searchEditText.setTextColor(Color.BLACK);
+                mySearchView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        searchEditText.setFocusable(true);
+                        searchEditText.setFocusableInTouchMode(true);
+                        searchEditText.requestFocus();
+                        return true;
+                    }
+                });
+                layout.addView(mySearchView);
+
+                // Instantiate ListView
+                foodListView = new ListView(HomepageActivity.this);
+                foodListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        Log.d("didyouclicksomething", "YES"); // works thank goodness
+
+                        Food foodSelected = (Food)foodListView.getItemAtPosition(i);
+                        String foodNameSelected = foodSelected.getFoodName();
+                        Log.d("whatyouclick", foodNameSelected);
+
+                        searchEditText.setText(foodNameSelected);
+
+                        // hide keyboard after clicking on item
+                        mySearchView.clearFocus();
+
+                        // hide list view
+                        foodListView.setVisibility(View.GONE);
+
+                        // make the search text not focusable since the user has already selected
+                        searchEditText.setFocusable(false);
+
+                        // Call nutrients API
+                        Call<JsonElement> call = calorieService2.getfoodnutrients(mySearchView.getQuery().toString());
+                        call.enqueue(new Callback<JsonElement>() {
+                            @Override
+                            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                                if(response.isSuccessful()) {
+                                        JsonObject result = response.body().getAsJsonObject();
+                                        Double resultCalories = result.get("calories").getAsDouble();
+                                        textFoodCalories.setText(Double.toString(resultCalories));
+                                } else {
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<JsonElement> call, Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                    }
+                });
+                layout.addView(foodListView);
+
+                // Call "Search Instant" Nutritionix API here
+                mySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        Log.d("donezo", "done");
+
+                        // make edit text not focusable and hide list view
+                        searchEditText.setFocusable(false);
+                        //layout.removeView(foodListView);
+                        foodListView.setVisibility(View.GONE);
+
+                        // hide keyboard after hitting search key
+                        mySearchView.clearFocus();
+
+
+                        // also call nutrients api here
+                        Call<JsonElement> call = calorieService2.getfoodnutrients(mySearchView.getQuery().toString());
+                        call.enqueue(new Callback<JsonElement>() {
+                            @Override
+                            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                                if(response.isSuccessful()) {
+                                    JsonObject result = response.body().getAsJsonObject();
+                                    Double resultCalories = result.get("calories").getAsDouble();
+                                    textFoodCalories.setText(Double.toString(resultCalories));
+                                } else {
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<JsonElement> call, Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String query) {
+                        // Call instant search
+                        //foodListView.setVisibility(View.VISIBLE);
+
+                        // to get focus back.... works!!!!
+                        searchEditText.setFocusable(true);
+                        searchEditText.setFocusableInTouchMode(true);
+                        searchEditText.requestFocus();
+
+                        // Make list view visible again
+                        foodListView.setVisibility(View.VISIBLE);
+
+                        Call<JsonElement> call = calorieService1.searchfood(mySearchView.getQuery().toString());
+                        call.enqueue(new Callback<JsonElement>() {
+                            @Override
+                            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                                if(response.isSuccessful()) {
+
+                                    foodArrayList = new ArrayList<Food>();
+
+                                    // Iterate through JSON response and get "COMMON" foods
+                                    JsonObject jObj = response.body().getAsJsonObject();
+                                    JsonArray commonArray =  jObj.getAsJsonArray("common");
+                                    for(int i = 0; i < commonArray.size(); i++) {
+                                        foodAdapter = new CustomFoodAdapter(HomepageActivity.this, foodArrayList);
+                                        foodListView.setAdapter(foodAdapter);
+
+                                        JsonObject obj = (JsonObject)commonArray.get(i);
+                                        String foodName = obj.get("food_name").getAsString();
+                                        //Log.d("foodname", foodName);
+
+                                        // Get thumbnail from photo json object
+                                        JsonObject photoObj = obj.get("photo").getAsJsonObject();
+                                        String thumb;
+                                        if(!photoObj.get("thumb").isJsonNull()) {
+                                            thumb = photoObj.get("thumb").getAsString();
+                                        }
+                                        else {
+                                            thumb = null;
+                                        }
+                                        foodArrayList.add(new Food(thumb, foodName));
+                                    }
+
+                                    // Iterate through JSON response and get "BRANDED" foods
+                                    JsonArray brandedArray =  jObj.getAsJsonArray("branded");
+                                    for(int i = 0; i < brandedArray.size(); i++) {
+                                        foodAdapter = new CustomFoodAdapter(HomepageActivity.this, foodArrayList);
+                                        foodListView.setAdapter(foodAdapter);
+
+                                        JsonObject obj = (JsonObject)brandedArray.get(i);
+                                        String foodName = obj.get("food_name").getAsString();
+
+                                        // Get thumbnail from photo json object
+                                        JsonObject photoObj = obj.get("photo").getAsJsonObject();
+                                        String thumb;
+                                        if(!photoObj.get("thumb").isJsonNull()) {
+                                            thumb = photoObj.get("thumb").getAsString();
+                                        }
+                                        else {
+                                            thumb = null;
+                                        }
+                                        foodArrayList.add(new Food(thumb, foodName));
+                                    }
+                                } else {
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<JsonElement> call, Throwable t) {
+                                call.cancel();
+                            }
+                        });
+                        return true;
+                    }
+                });
 
                 //Add Calorie Fields
                 final TextView txtCalories = new TextView (HomepageActivity.this);
@@ -117,9 +314,10 @@ public class HomepageActivity extends AppCompatActivity
                 txtCalories.setTextSize(20);
                 layout.addView(txtCalories);
 
-                final EditText editTextCalories = new EditText(HomepageActivity.this);
-                editTextCalories.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_NUMBER);
-                layout.addView(editTextCalories);
+                textFoodCalories = new TextView(HomepageActivity.this);
+                //textFoodCalories.setText(Double.toString(foodCalories));
+                textFoodCalories.setTextSize(25);
+                layout.addView(textFoodCalories);
 
                 //Add Date Fields
                 final TextView txtDate = new TextView (HomepageActivity.this);
@@ -142,17 +340,8 @@ public class HomepageActivity extends AppCompatActivity
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(pckDate.getYear(), pckDate.getMonth(), pckDate.getDayOfMonth());
 
-
-                        Integer calorieInteger = new Integer(editTextCalories.getText().toString());
-                        calorieData.addFood(editTextFoodName.getText().toString(), calorieInteger, calendar.getTime());
-
-                        caloriesConsumed += calorieInteger.intValue();
-                        caloriesConsumedNumView.setText(Integer.toString(caloriesConsumed));
-
-
-
-                        TextView calorieList = (TextView) findViewById(R.id.editTxtCalorieList);
-                        calorieList.setText(calorieData.toString());
+                        caloriesConsumed += Double.parseDouble(textFoodCalories.getText().toString());
+                        caloriesConsumedNumView.setText(String.format("%.2f", caloriesConsumed));
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -189,27 +378,25 @@ public class HomepageActivity extends AppCompatActivity
         });
         graph.addSeries(series);
 
-        // Calculate BMR
+        // Calculate BMR, call API and get user's profile
         JsonObject jObj = new JsonObject();
-
-        // Call API and get user's profile
         mSelf = this;
         Call<JsonElement> call = profileService.getprofile();
         call.enqueue(new Callback<JsonElement>() {
             int weightInPounds, height, age;
             double weightInKilograms;
-            String gender;
+            String gender, activityLevel;
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 if(response.isSuccessful()) {
                     // Get profile and get the user's info
                     JsonObject jObj = response.body().getAsJsonObject();
-                    Log.d("bmr", "worked");
 
                     weightInPounds = jObj.get("weight").getAsInt();
                     height = jObj.get("height").getAsInt();
                     gender = jObj.get("gender").getAsString();
                     age = jObj.get("age").getAsInt();
+                    activityLevel = jObj.get("activity_level").getAsString();
                     weightInKilograms = weightInPounds / 2.205;
 
                     if(gender.equals("M")) {
@@ -218,22 +405,24 @@ public class HomepageActivity extends AppCompatActivity
                         bmr = (10 * weightInKilograms) + (6.25 * height) - (5 * age) - 161;
                     }
 
-                    Log.d("BMR", Double.toString(bmr));
-                    Log.d("level", CreateProfileActivity.activityValue);
-
                     int roundedCalorieSuggestion;
-                    if(CreateProfileActivity.activityValue.equals("Sedentary")) {
+                    if(activityLevel.equalsIgnoreCase("Sedentary")) {
                         roundedCalorieSuggestion = (int) Math.round(bmr * 1.53);
                         suggestedCaloriesNumView.setText(Integer.toString(roundedCalorieSuggestion));
-                    } else if(CreateProfileActivity.activityValue.equals("Mildly Active")) {
+                    } else if(activityLevel.equalsIgnoreCase("Mildly Active")) {
                         roundedCalorieSuggestion = (int) Math.round(bmr * 1.76);
                         suggestedCaloriesNumView.setText(Integer.toString(roundedCalorieSuggestion));
-                    } else if(CreateProfileActivity.activityValue.equals("Very Active")) {
+                    } else if(activityLevel.equalsIgnoreCase("Very Active")) {
                         roundedCalorieSuggestion = (int) Math.round(bmr * 2.25);
                         suggestedCaloriesNumView.setText(Integer.toString(roundedCalorieSuggestion));
                     }
 
-
+                    Log.d("stuff", Integer.toString(weightInPounds));
+                    Log.d("stuff", Integer.toString(height));
+                    Log.d("stuff", Integer.toString(age));
+                    Log.d("stuff", gender);
+                    Log.d("stuff", activityLevel);
+                    Log.d("stuff", suggestedCaloriesNumView.getText().toString());
 
                 } else {
                     Log.d("bmr", "nope");

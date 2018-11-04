@@ -34,7 +34,7 @@ public class CreateProfileActivity extends AppCompatActivity {
     EditText firstNameText, lastNameText, txtWeight, txtHeight1, txtHeight2, txtDOB;
     Spinner genderSpinner, activitySpinner;
     String genderValue = " ";
-    static String activityValue = " ";
+    String activityValue = " ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,6 +213,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         jObj.addProperty("height", txtHeight1.getText().toString());
         jObj.addProperty("gender", genderValue.charAt(0));
         jObj.addProperty("dob", txtDOB.getText().toString());
+        jObj.addProperty("activity_level", activityValue);
 
         // Call API and create profile
         mSelf = this;
@@ -227,12 +228,8 @@ public class CreateProfileActivity extends AppCompatActivity {
                     Log.d("worked", "worked");
 
 
-                    Intent profileIntent = new Intent(mSelf.getApplicationContext(), HomepageActivity.class);
-                   // Bundle extras = new Bundle();
-                    //extras.putString("FIRST_NAME", jObj.get("first_name").getAsString());
-                   // extras.putString("LAST_NAME",jObj.get("last_name").getAsString());
-                    //profileIntent.putExtras(extras);
-                    startActivity(profileIntent);
+                    Intent goHomeIntent = new Intent(mSelf.getApplicationContext(), HomepageActivity.class);
+                    startActivity(goHomeIntent);
                     finish();
                 } else {
                     Log.d("worked", "nope");
@@ -244,11 +241,6 @@ public class CreateProfileActivity extends AppCompatActivity {
                 call.cancel();
             }
         });
-
-        //mSelf = this;
-        //Intent homePageIntent = new Intent(mSelf.getApplicationContext(), HomepageActivity.class);
-        //startActivity(homePageIntent);
-        //finish();
     }
 
 }

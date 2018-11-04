@@ -6,38 +6,36 @@
     android:layout_height="match_parent"
     tools:context=".Activities.ProfileActivity">
 
-    <ImageView
-        android:id="@+id/mountainBackground"
-        android:layout_width="404dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="50dp"
-        android:background="@drawable/mountainsprofile"
-        app:layout_constraintBottom_toTopOf="@+id/userFullName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/profilePicture"
-        android:layout_width="213dp"
-        android:layout_height="163dp"
-        android:layout_marginTop="104dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/profile_pic" />
-
-    <TextView
-        android:id="@+id/userFullName"
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="240dp"
-        android:gravity="center"
-        android:text="TextView"
+        android:layout_height="0dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/profilePicture"
-        app:layout_constraintStart_toStartOf="@+id/profilePicture"
-        app:layout_constraintTop_toBottomOf="@+id/mountainBackground"
-        tools:textSize="24sp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/mountainBackground"
+            android:layout_width="404dp"
+            android:layout_height="204dp"
+            android:background="@drawable/profile_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="156dp"
+            android:layout_height="156dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="-90dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@mipmap/profile_pic"/>
+            <!--app:civ_border_color="#FF000000"
+            app:civ_border_width="1px" -->
+
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
