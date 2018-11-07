@@ -1,7 +1,5 @@
 package edu.csulb.rob.anacodiam.Activities;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,7 +9,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -22,15 +19,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -53,13 +46,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import android.app.AlertDialog;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 
 
 public class HomepageActivity extends AppCompatActivity
@@ -77,15 +68,9 @@ public class HomepageActivity extends AppCompatActivity
     private SearchView mySearchView;
     private ArrayList<Food> foodArrayList;
     private CustomFoodAdapter foodAdapter;
-    private Food selectedFood;
-
-    CalorieData calorieData = new CalorieData();
-
-    // Initialize both calorie text views to 0 and add to them as you go
-
 
     // Need to be calculated
-    double caloriesSuggested = 0, bmr = 0, foodCalories = 0, caloriesConsumed = 0;;
+    double caloriesSuggested = 0, bmr = 0, foodCalories = 0, caloriesConsumed = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +78,7 @@ public class HomepageActivity extends AppCompatActivity
         setContentView(R.layout.navdrawer_homepage);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         profileService = APIClient.getClient().create(ProfileService.class);
 
@@ -177,8 +163,8 @@ public class HomepageActivity extends AppCompatActivity
                             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                                 if(response.isSuccessful()) {
                                         JsonObject result = response.body().getAsJsonObject();
-                                        Double resultCalories = result.get("calories").getAsDouble();
-                                        textFoodCalories.setText(Double.toString(resultCalories));
+                                        foodCalories = result.get("calories").getAsDouble();
+                                        textFoodCalories.setText(Double.toString(foodCalories));
                                 } else {
 
                                 }
@@ -215,8 +201,8 @@ public class HomepageActivity extends AppCompatActivity
                             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                                 if(response.isSuccessful()) {
                                     JsonObject result = response.body().getAsJsonObject();
-                                    Double resultCalories = result.get("calories").getAsDouble();
-                                    textFoodCalories.setText(Double.toString(resultCalories));
+                                    foodCalories = result.get("calories").getAsDouble();
+                                    textFoodCalories.setText(Double.toString(foodCalories));
                                 } else {
 
                                 }
@@ -405,16 +391,15 @@ public class HomepageActivity extends AppCompatActivity
                         bmr = (10 * weightInKilograms) + (6.25 * height) - (5 * age) - 161;
                     }
 
-                    int roundedCalorieSuggestion;
                     if(activityLevel.equalsIgnoreCase("Sedentary")) {
-                        roundedCalorieSuggestion = (int) Math.round(bmr * 1.53);
-                        suggestedCaloriesNumView.setText(Integer.toString(roundedCalorieSuggestion));
+                        caloriesSuggested = (int) Math.round(bmr * 1.53);
+                        suggestedCaloriesNumView.setText(Double.toString(caloriesSuggested));
                     } else if(activityLevel.equalsIgnoreCase("Mildly Active")) {
-                        roundedCalorieSuggestion = (int) Math.round(bmr * 1.76);
-                        suggestedCaloriesNumView.setText(Integer.toString(roundedCalorieSuggestion));
+                        caloriesSuggested = (int) Math.round(bmr * 1.76);
+                        suggestedCaloriesNumView.setText(Double.toString(caloriesSuggested));
                     } else if(activityLevel.equalsIgnoreCase("Very Active")) {
-                        roundedCalorieSuggestion = (int) Math.round(bmr * 2.25);
-                        suggestedCaloriesNumView.setText(Integer.toString(roundedCalorieSuggestion));
+                        caloriesSuggested = (int) Math.round(bmr * 2.25);
+                        suggestedCaloriesNumView.setText(Double.toString(caloriesSuggested));
                     }
 
                     Log.d("stuff", Integer.toString(weightInPounds));
@@ -553,11 +538,7 @@ public class HomepageActivity extends AppCompatActivity
         // Go to the appropriate page depending on what is clicked
         int id = item.getItemId();
 
-        if (id == R.id.nav_edit_profile) {
-            // GO TO EDIT PROFILE PAGE
-            Intent updateProfileIntent = new Intent(this, UpdateProfileActivity.class);
-            startActivity(updateProfileIntent);
-        } else if (id == R.id.nav_view_profile) {
+        if (id == R.id.nav_view_profile) {
             // GO TO PROFILE PAGE, bring the user's name with it
             Intent viewProfileIntent = new Intent(this, ProfileActivity.class);
             startActivity(viewProfileIntent);
