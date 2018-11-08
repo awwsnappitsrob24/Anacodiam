@@ -18,10 +18,12 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -63,6 +65,11 @@ public class ProfileActivity extends AppCompatActivity {
     private int age;
     private String activityLevel;
     private String dob;
+    private EditText feetEditText;
+    private EditText inchesEditText;
+    private EditText cmEditText;
+    private EditText lbsEditText;
+    private EditText kgEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,10 +192,6 @@ public class ProfileActivity extends AppCompatActivity {
                 LinearLayout layout = new LinearLayout(context);
                 layout.setOrientation(LinearLayout.VERTICAL);
 
-                final EditText heightInput = new EditText(ProfileActivity.this);
-                heightInput.setHint("Height");
-                layout.addView(heightInput);
-
                 ArrayList<String> heightArray = new ArrayList<>();
                 heightArray.add("ft. in.");
                 heightArray.add("cm");
@@ -198,10 +201,74 @@ public class ProfileActivity extends AppCompatActivity {
                 heightSpinner.setAdapter(spinnerArrayAdapter);
                 layout.addView(heightSpinner);
 
+                feetEditText = new EditText(ProfileActivity.this);
+                feetEditText.setHint("feet");
+                feetEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+                layout.addView(feetEditText);
+
+                inchesEditText = new EditText(ProfileActivity.this);
+                inchesEditText.setHint("inches");
+                inchesEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+                layout.addView(inchesEditText);
+
+                cmEditText = new EditText(ProfileActivity.this);
+                cmEditText.setHint("cm");
+                cmEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+                layout.addView(cmEditText);
+
+
+                heightSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        if(heightSpinner.getSelectedItem().toString().equalsIgnoreCase("ft. in.")) {
+                            layout.removeView(cmEditText);
+                            feetEditText.setVisibility(View.VISIBLE);
+                            inchesEditText.setVisibility(View.VISIBLE);
+                        } else {
+                            layout.addView(cmEditText);
+                            feetEditText.setVisibility(View.GONE);
+                            inchesEditText.setVisibility(View.GONE);
+                            cmEditText.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        // need conversions depending on what the user picked on the spinner
+
+                        // Convert ft and in to cm
+                        if(heightSpinner.getSelectedItem().toString().equalsIgnoreCase("ft. in.")) {
+                            if(!feetEditText.getText().toString().equals("") && !inchesEditText.getText()
+                                    .toString().equals("")) {
+                                int feetEntered = Integer.parseInt(feetEditText.getText().toString());
+                                int inchesEntered = Integer.parseInt(inchesEditText.getText().toString());
+                                double cmEquivalent = feetEntered * 12 * 2.54 + inchesEntered * 2.54;
+
+                                profHeight.setText(feetEntered + " feet " + inchesEntered + " inches / " +
+                                        String.format("%.2f", cmEquivalent) + " cm");
+                                updateHeight(cmEquivalent);
+                            } else {
+                                // Should set error message....
+                            }
+
+                        } else {
+
+                            // Convert cm to ft and in
+                            int feet = (int) Math.floor((Double.parseDouble(cmEditText.getText().toString())
+                                    / 2.54) / 12);
+                            int inches = (int)Math.ceil((Double.parseDouble(cmEditText.getText().toString())
+                                    / 2.54) - (feet * 12));
+                            profHeight.setText(feet + " feet " + inches + " inches / " +
+                                    String.format("%.2f", Double.parseDouble(cmEditText.getText().toString()))
+                                    + " cm");
+                            updateHeight(Double.parseDouble(cmEditText.getText().toString()));
+                        }
                     }
                 });
 
@@ -230,23 +297,68 @@ public class ProfileActivity extends AppCompatActivity {
                 LinearLayout layout = new LinearLayout(context);
                 layout.setOrientation(LinearLayout.VERTICAL);
 
-                final EditText heightInput = new EditText(ProfileActivity.this);
-                heightInput.setHint("Weight");
-                layout.addView(heightInput);
-
-                ArrayList<String> heightArray = new ArrayList<>();
-                heightArray.add("lbs");
-                heightArray.add("kg");
-                Spinner heightSpinner = new Spinner(ProfileActivity.this);
+                ArrayList<String> weightArray = new ArrayList<>();
+                weightArray.add("lbs");
+                weightArray.add("kg");
+                Spinner weightSpinner = new Spinner(ProfileActivity.this);
                 ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(ProfileActivity.this,
-                        android.R.layout.simple_spinner_dropdown_item, heightArray);
-                heightSpinner.setAdapter(spinnerArrayAdapter);
-                layout.addView(heightSpinner);
+                        android.R.layout.simple_spinner_dropdown_item, weightArray);
+                weightSpinner.setAdapter(spinnerArrayAdapter);
+                layout.addView(weightSpinner);
+
+                lbsEditText = new EditText(ProfileActivity.this);
+                lbsEditText.setHint("lbs");
+                lbsEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+                layout.addView(lbsEditText);
+
+                kgEditText = new EditText(ProfileActivity.this);
+                kgEditText.setHint("kg");
+                kgEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+                layout.addView(kgEditText);
+
+                weightSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        if(weightSpinner.getSelectedItem().toString().equalsIgnoreCase("lbs")) {
+                            layout.removeView(kgEditText);
+                            lbsEditText.setVisibility(View.VISIBLE);
+                        } else {
+                            layout.addView(kgEditText);
+                            lbsEditText.setVisibility(View.GONE);
+                            kgEditText.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
 
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        // Only update if required fields are filled out. If not, do nothing.
+                        // Convert lbs to kg
+                        if(weightSpinner.getSelectedItem().toString().equalsIgnoreCase("lbs")) {
+                            if(!lbsEditText.getText().toString().equals("")) {
+                                double lbsEntered = Double.parseDouble(lbsEditText.getText().toString());
+                                double kgEquivalent = lbsEntered / 2.205;
 
+                                profWeight.setText((String.format("%.2f", lbsEntered) + " lbs / " +
+                                        String.format("%.2f", kgEquivalent) + " kg"));
+                                updateWeight(lbsEntered);
+                            }
+                        } else {
+                            // Convert kg to lbs
+                            if(!kgEditText.getText().toString().equals("")) {
+                                double kgEntered =  Double.parseDouble(kgEditText.getText().toString());
+                                double lbsEquivalent = kgEntered * 2.205;
+                                profWeight.setText((String.format("%.2f", lbsEquivalent) + " lbs / " +
+                                        String.format("%.2f", kgEntered) + " kg"));
+                                updateWeight(lbsEquivalent);
+                            }
+                        }
                     }
                 });
 
