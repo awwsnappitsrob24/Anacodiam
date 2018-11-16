@@ -19,6 +19,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -27,12 +29,19 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 
 import edu.csulb.rob.anacodiam.Activities.API.APIClient;
 import edu.csulb.rob.anacodiam.Activities.API.AuthenticationService;
@@ -47,6 +56,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import android.app.AlertDialog;
 
+import org.w3c.dom.Text;
+
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -68,9 +80,11 @@ public class HomepageActivity extends AppCompatActivity
     private SearchView mySearchView;
     private ArrayList<Food> foodArrayList;
     private CustomFoodAdapter foodAdapter;
+    private VerticalTextView yAxisLabel;
 
     // Need to be calculated
-    double caloriesSuggested = 0, bmr = 0, foodCalories = 0, caloriesConsumed = 0;
+    double bmr = 0, foodCalories = 0, caloriesConsumed = 0, caloriesSuggested = 0, proteinIntake = 0,
+        carbIntake = 0, fatIntake = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +108,57 @@ public class HomepageActivity extends AppCompatActivity
         suggestedCaloriesNumView.setGravity(Gravity.CENTER_HORIZONTAL);
         suggestedCaloriesNumView.setTextSize(40);
 
+        yAxisLabel = (VerticalTextView) findViewById(R.id.yAxisTextView);
+        yAxisLabel.setText("Calories");
+
         calorieService1 = NutritionixAPISearch.getClient().create(CalorieService.class);
         calorieService2 = APIClient.getClient().create(CalorieService.class);
+
+        // Simulate someone taking a pill. Run this method every X seconds and feed the app calories
+        // Show changes in the graph.
+        BarChart barChart = (BarChart) findViewById(R.id.calorieChart);
+        barChart.setDrawBarShadow(true);
+        barChart.setDrawBarShadow(true);
+        barChart.setMaxVisibleValueCount(50);
+        barChart.setPinchZoom(false);
+        barChart.setDrawGridBackground(true);
+
+        ArrayList<BarEntry> goalEntries = new ArrayList<>();
+        goalEntries.add(new BarEntry(1, 0f));
+        goalEntries.add(new BarEntry(2, 0f));
+        goalEntries.add(new BarEntry(3, 0f));
+        goalEntries.add(new BarEntry(4, 0f));
+
+        ArrayList<BarEntry> intakeEntries = new ArrayList<>();
+        intakeEntries.add(new BarEntry(1, 0f));
+        intakeEntries.add(new BarEntry(2, 0f));
+        intakeEntries.add(new BarEntry(3, 0f));
+        intakeEntries.add(new BarEntry(4, 0f));
+
+        BarDataSet barDataGoalSet = new BarDataSet(goalEntries, "Goals");
+        barDataGoalSet.setColors(Color.GREEN);
+
+        BarDataSet barDataIntakeSet = new BarDataSet(intakeEntries, "Intake");
+        barDataIntakeSet.setColors(Color.BLUE);
+
+        BarData data = new BarData(barDataGoalSet, barDataIntakeSet);
+
+        setGraphSettings(barChart, data);
+
+        String[] nutrients = new String[] {"", "Calories", "Protein", "Carbohydrates", "Fats", ""};
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setValueFormatter(new MyXAxisValueFormatter(nutrients));
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(1);
+        xAxis.setCenterAxisLabels(true);
+        xAxis.setAxisMinimum(1);
+        xAxis.setAxisMaximum(barDataGoalSet.getXMax() + 0.99f);
+        xAxis.setAxisMaximum(barDataIntakeSet.getXMax() + 0.99f);
+
+        barChart.getAxisRight().setEnabled(false);
+        barChart.setDrawBarShadow(false);
+        barChart.getDescription().setEnabled(false);
+        barChart.invalidate();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_calories);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -139,11 +202,9 @@ public class HomepageActivity extends AppCompatActivity
                 foodListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        Log.d("didyouclicksomething", "YES"); // works thank goodness
 
                         Food foodSelected = (Food)foodListView.getItemAtPosition(i);
                         String foodNameSelected = foodSelected.getFoodName();
-                        Log.d("whatyouclick", foodNameSelected);
 
                         searchEditText.setText(foodNameSelected);
 
@@ -164,6 +225,9 @@ public class HomepageActivity extends AppCompatActivity
                                 if(response.isSuccessful()) {
                                         JsonObject result = response.body().getAsJsonObject();
                                         foodCalories = result.get("calories").getAsDouble();
+                                        proteinIntake += result.get("protein").getAsDouble();
+                                        carbIntake += result.get("carb").getAsDouble();
+                                        fatIntake += result.get("fat").getAsDouble();
                                         textFoodCalories.setText(Double.toString(foodCalories));
                                 } else {
 
@@ -183,7 +247,6 @@ public class HomepageActivity extends AppCompatActivity
                 mySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                     @Override
                     public boolean onQueryTextSubmit(String query) {
-                        Log.d("donezo", "done");
 
                         // make edit text not focusable and hide list view
                         searchEditText.setFocusable(false);
@@ -202,6 +265,9 @@ public class HomepageActivity extends AppCompatActivity
                                 if(response.isSuccessful()) {
                                     JsonObject result = response.body().getAsJsonObject();
                                     foodCalories = result.get("calories").getAsDouble();
+                                    proteinIntake += result.get("protein").getAsDouble();
+                                    carbIntake += result.get("carb").getAsDouble();
+                                    fatIntake += result.get("fat").getAsDouble();
                                     textFoodCalories.setText(Double.toString(foodCalories));
                                 } else {
 
@@ -326,8 +392,16 @@ public class HomepageActivity extends AppCompatActivity
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(pckDate.getYear(), pckDate.getMonth(), pckDate.getDayOfMonth());
 
+                        // Get total calories, protein, carbs, and fat for food
                         caloriesConsumed += Double.parseDouble(textFoodCalories.getText().toString());
                         caloriesConsumedNumView.setText(String.format("%.2f", caloriesConsumed));
+
+                        setCalorieIntakeToGraph(intakeEntries, barChart, data, (float)caloriesConsumed);
+
+                        // Fat has 9 calories per gram, protein and crabs have 4 calories per gram
+                        setProteinIntakeToGraph(intakeEntries, barChart, data, (float)proteinIntake * 4);
+                        setCarbIntakeToGraph(intakeEntries, barChart, data, (float)carbIntake * 4);
+                        setFatIntakeToGraph(intakeEntries, barChart, data, (float)fatIntake * 9);
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -352,26 +426,14 @@ public class HomepageActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Initialize line graph here for the calorie information with dummy values for now
-        GraphView graph = (GraphView) findViewById(R.id.calorie_graph);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
-                // REPLACE THESE VALUES WITH CALORIES FROM DATABASE
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6)
-        });
-        graph.addSeries(series);
-
         // Calculate BMR, call API and get user's profile
-        JsonObject jObj = new JsonObject();
         mSelf = this;
         Call<JsonElement> call = profileService.getprofile();
         call.enqueue(new Callback<JsonElement>() {
             int weightInPounds, height, age;
-            double weightInKilograms;
+            double weightInKilograms, proteinGoal, carbGoal, fatGoal;
             String gender, activityLevel;
+             /// use this to pass on to the graph
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 if(response.isSuccessful()) {
@@ -393,12 +455,21 @@ public class HomepageActivity extends AppCompatActivity
 
                     if(activityLevel.equalsIgnoreCase("Sedentary")) {
                         caloriesSuggested = (int) Math.round(bmr * 1.53);
+                        carbGoal = caloriesSuggested * .45;
+                        proteinGoal = caloriesSuggested * .35;
+                        fatGoal = caloriesSuggested * .20;
                         suggestedCaloriesNumView.setText(Double.toString(caloriesSuggested));
                     } else if(activityLevel.equalsIgnoreCase("Mildly Active")) {
                         caloriesSuggested = (int) Math.round(bmr * 1.76);
+                        carbGoal = caloriesSuggested * .50;
+                        proteinGoal = caloriesSuggested * .30;
+                        fatGoal = caloriesSuggested * .20;
                         suggestedCaloriesNumView.setText(Double.toString(caloriesSuggested));
                     } else if(activityLevel.equalsIgnoreCase("Very Active")) {
                         caloriesSuggested = (int) Math.round(bmr * 2.25);
+                        carbGoal = caloriesSuggested * .55;
+                        proteinGoal = caloriesSuggested * .25;
+                        fatGoal = caloriesSuggested * .20;
                         suggestedCaloriesNumView.setText(Double.toString(caloriesSuggested));
                     }
 
@@ -408,6 +479,11 @@ public class HomepageActivity extends AppCompatActivity
                     Log.d("stuff", gender);
                     Log.d("stuff", activityLevel);
                     Log.d("stuff", suggestedCaloriesNumView.getText().toString());
+
+                    setCalorieGoalToGraph(goalEntries, barChart, data, (float)caloriesSuggested);
+                    setProteinGoalToGraph(goalEntries, barChart, data, (float)proteinGoal);
+                    setCarbGoalToGraph(goalEntries, barChart, data, (float)carbGoal);
+                    setFatGoalToGraph(goalEntries, barChart, data, (float)fatGoal);
 
                 } else {
                     Log.d("bmr", "nope");
@@ -419,6 +495,88 @@ public class HomepageActivity extends AppCompatActivity
                 call.cancel();
             }
         });
+
+    }
+
+    public void setCalorieGoalToGraph(ArrayList<BarEntry> myList, BarChart myChart, BarData myData,
+                                      float calorieGoalValue) {
+        myList.remove(0);
+        myList.add(0, new BarEntry(1, calorieGoalValue));
+        myChart.getAxisLeft().setAxisMaximum(calorieGoalValue + 500);
+        setGraphSettings(myChart, myData);
+    }
+
+    public void setProteinGoalToGraph(ArrayList<BarEntry> myList, BarChart myChart, BarData myData,
+                                      float proteinGoalValue) {
+        myList.remove(1);
+        myList.add(1, new BarEntry(2, proteinGoalValue));
+        setGraphSettings(myChart, myData);
+    }
+
+    public void setCarbGoalToGraph(ArrayList<BarEntry> myList, BarChart myChart, BarData myData,
+                                      float carbGoalValue) {
+        myList.remove(2);
+        myList.add(2, new BarEntry(3, carbGoalValue));
+        setGraphSettings(myChart, myData);
+    }
+
+    public void setFatGoalToGraph(ArrayList<BarEntry> myList, BarChart myChart, BarData myData,
+                                   float fatGoalValue) {
+        myList.remove(3);
+        myList.add(3, new BarEntry(4, fatGoalValue));
+        setGraphSettings(myChart, myData);
+    }
+
+    public void setCalorieIntakeToGraph(ArrayList<BarEntry> myList, BarChart myChart, BarData myData,
+                                      float calorieIntakeValue) {
+        myList.remove(0);
+        myList.add(0, new BarEntry(1, calorieIntakeValue));
+        setGraphSettings(myChart, myData);
+    }
+
+    public void setProteinIntakeToGraph(ArrayList<BarEntry> myList, BarChart myChart, BarData myData,
+                                        float proteinIntakeValue) {
+        myList.remove(1);
+        myList.add(1, new BarEntry(2,  proteinIntakeValue));
+        setGraphSettings(myChart, myData);
+    }
+
+    public void setCarbIntakeToGraph(ArrayList<BarEntry> myList, BarChart myChart, BarData myData,
+                                        float carbIntakeValue) {
+        myList.remove(2);
+        myList.add(2, new BarEntry(3, carbIntakeValue));
+        setGraphSettings(myChart, myData);
+    }
+
+    public void setFatIntakeToGraph(ArrayList<BarEntry> myList, BarChart myChart, BarData myData,
+                                        float fatIntakeValue) {
+        myList.remove(3);
+        myList.add(3, new BarEntry(4, fatIntakeValue));
+        setGraphSettings(myChart, myData);
+    }
+
+    public void setGraphSettings(BarChart myChart, BarData myData) {
+        float groupSpace = 0.2f;
+        float barSpace = 0.05f;
+        float barWidth = 0.35f;
+        myChart.setData(myData);
+        myData.setBarWidth(barWidth);
+        myChart.groupBars(1, groupSpace, barSpace);
+        myChart.invalidate();
+    }
+
+    public class MyXAxisValueFormatter implements IAxisValueFormatter {
+
+        private String[] mValues;
+
+        public MyXAxisValueFormatter(String[] values) {
+            this.mValues = values;
+        }
+
+        @Override
+        public String getFormattedValue(float value, AxisBase axis) {
+            return mValues[(int) value];
+        }
     }
 
 

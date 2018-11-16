@@ -8,6 +8,16 @@
     tools:context=".Activities.HomepageActivity"
     tools:showIn="@layout/app_bar_homepage">
 
+    <edu.csulb.rob.anacodiam.Activities.VerticalTextView
+        android:id="@+id/yAxisTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="110dp"
+        android:layout_marginBottom="258dp"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/suggestedCaloriesNumView"
         android:layout_width="0dp"
@@ -33,10 +43,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.jjoe64.graphview.GraphView
-            android:id="@+id/calorie_graph"
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/calorieChart"
             android:layout_width="match_parent"
-            android:layout_height="210dp" />
+            android:layout_height="310dp"
+            android:layout_marginLeft="20dp" />
 
     </LinearLayout>
 
@@ -81,6 +92,7 @@
         app:layout_constraintTop_toBottomOf="@+id/caloriesConsumedView" />
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -92,7 +104,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/suggestedCaloriesNumView">
+        app:layout_constraintTop_toBottomOf="@+id/yAxisTextView">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -114,9 +126,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp" />
+
         </LinearLayout>
     </ScrollView>
-
 
 
 </android.support.constraint.ConstraintLayout>
