@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  *  Class where all the settings for the API are done.
  */
-public class APIClient {
+public class NutritionixAPISearch {
 
     private static Retrofit retrofit = null;
     private static String mToken = "";
@@ -28,13 +28,11 @@ public class APIClient {
         builder.addInterceptor(chain -> {
             Request original = chain.request();
 
-            Request.Builder bRequest = original.newBuilder();
-                    //.header("Authorization", "JWT" + mToken)
-            if (!mToken.equals("")) {
-                bRequest.header("Authorization", "JWT " + mToken);
-            }
-            Request request = bRequest.method(original.method(), original.body()).build();
-
+            Request request = original.newBuilder()
+                    .header("x-app-id", "9024fda1")
+                    .header("x-app-key", "61c18a66be3c98d50235435cacea38eb")
+                    .method(original.method(), original.body())
+                    .build();
 
             return chain.proceed(request);
         });
@@ -43,19 +41,14 @@ public class APIClient {
 
         retrofit = new Retrofit.Builder()
 //                .baseUrl("http://10.39.103.87:8000/api")
-               .baseUrl("http://192.168.0.126:8000/api/")
+//                .baseUrl("http://192.168.0.126:8000/api/")
 //                .baseUrl("http://192.168.99.100:8000/api") //from postman
 //                .baseUrl("http://10.0.2.2:8000/api") // for emulator
+                .baseUrl("https://trackapi.nutritionix.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
 
         return retrofit;
     }
-
-    static public void setToken(String token) {
-        mToken = token;
-    }
-
 }
-

@@ -4,40 +4,241 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".Activities.ProfileActivity">
 
-    <ImageView
-        android:id="@+id/mountainBackground"
-        android:layout_width="404dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="50dp"
-        android:background="@drawable/mountainsprofile"
-        app:layout_constraintBottom_toTopOf="@+id/userFullName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/profilePicture"
-        android:layout_width="213dp"
-        android:layout_height="163dp"
-        android:layout_marginTop="104dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/profile_pic" />
+        app:layout_constraintVertical_bias="0.0">
 
-    <TextView
-        android:id="@+id/userFullName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="240dp"
-        android:gravity="center"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/profilePicture"
-        app:layout_constraintStart_toStartOf="@+id/profilePicture"
-        app:layout_constraintTop_toBottomOf="@+id/mountainBackground"
-        tools:textSize="24sp" />
+        <ImageView
+            android:id="@+id/mountainBackground"
+            android:layout_width="404dp"
+            android:layout_height="204dp"
+            android:background="@drawable/profile_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/mountainBackground"
+            android:layout_marginTop="58dp"
+            android:background="#90909090" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/divider1"
+            android:layout_marginTop="58dp"
+            android:background="#90909090" />
+
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/divider2"
+            android:layout_marginTop="58dp"
+            android:background="#90909090" />
+
+        <View
+            android:id="@+id/divider4"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/divider3"
+            android:layout_marginTop="58dp"
+            android:background="#90909090" />
+
+        <View
+            android:id="@+id/divider5"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/divider4"
+            android:layout_marginTop="58dp"
+            android:background="#90909090" />
+
+        <TextView
+            android:id="@+id/textFullName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/mountainBackground"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="225dp"
+            android:textColor="#000000"
+            android:text="Name" />
+
+        <TextView
+            android:id="@+id/textHeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider1"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="219dp"
+            android:textColor="#000000"
+            android:text="Height" />
+
+        <TextView
+            android:id="@+id/textWeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider2"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="219dp"
+            android:textColor="#000000"
+            android:text="Weight" />
+
+        <TextView
+            android:id="@+id/textAge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider3"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="219dp"
+            android:textColor="#000000"
+            android:text="Age" />
+
+        <TextView
+            android:id="@+id/textGender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider4"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="219dp"
+            android:textColor="#000000"
+            android:text="Gender" />
+
+        <TextView
+            android:id="@+id/textActivityLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider5"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="219dp"
+            android:textColor="#000000"
+            android:text="Activity Level" />
+
+        <TextView
+            android:id="@+id/textActualName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textFullName"
+            android:layout_centerHorizontal="true"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/updateName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textActualName"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="219dp"
+            app:fabSize="mini"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
+
+        <TextView
+            android:id="@+id/textActualHeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textHeight"
+            android:layout_centerHorizontal="true"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/updateHeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textActualHeight"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="219dp"
+            app:fabSize="mini"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
+
+        <TextView
+            android:id="@+id/textActualWeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textWeight"
+            android:layout_centerHorizontal="true"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/updateWeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textActualWeight"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="219dp"
+            app:fabSize="mini"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
+
+        <TextView
+            android:id="@+id/textActualAge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textAge"
+            android:layout_centerHorizontal="true"/>
+
+
+        <TextView
+            android:id="@+id/textActualGender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textGender"
+            android:layout_centerHorizontal="true"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/updateGender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textActualGender"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="219dp"
+            app:fabSize="mini"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
+
+        <TextView
+            android:id="@+id/textActualActivityLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textActivityLevel"
+            android:layout_centerHorizontal="true"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/updateActivityLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textActualActivityLevel"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="219dp"
+            app:fabSize="mini"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
+
+
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
