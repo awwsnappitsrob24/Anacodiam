@@ -5,7 +5,7 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FoodEntry">
+    tools:context=".Activities.FoodEntry">
 
     <!-- TODO: Update blank fragment layout -->
     <ScrollView
@@ -34,14 +34,14 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:text="Food"
+                android:text="Exercise"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/txtFoodName"
+                android:id="@+id/txtExerciseName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -65,10 +65,10 @@
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtFoodName" />
+                app:layout_constraintTop_toBottomOf="@+id/txtExerciseName" />
 
             <EditText
-                android:id="@+id/txtCalories"
+                android:id="@+id/txtExerciseCalories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -93,10 +93,10 @@
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtCalories" />
+                app:layout_constraintTop_toBottomOf="@+id/txtExerciseCalories" />
 
             <CalendarView
-                android:id="@+id/calFoodEntry"
+                android:id="@+id/calExerciseEntry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -111,14 +111,14 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btnFoodEntryOK"
+                    android:id="@+id/btnExerciseEntryOK"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="OK" />
 
                 <Button
-                    android:id="@+id/btnExerciseEntryOK"
+                    android:id="@+id/btnExerciseEntryCancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
