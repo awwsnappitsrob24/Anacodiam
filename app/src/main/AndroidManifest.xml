@@ -38,11 +38,7 @@
             android:label="@string/title_activity_profile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activities.ShareActivity"
-            android:label="@string/title_activity_share"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Activities.MessageActivity"
+            android:name=".Activities.LinkActivity"
             android:label="@string/title_activity_message"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

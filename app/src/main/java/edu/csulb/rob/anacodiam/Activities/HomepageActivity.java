@@ -19,8 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -32,13 +30,10 @@ import android.widget.TextView;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -56,9 +51,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import android.app.AlertDialog;
 
-import org.w3c.dom.Text;
-
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -73,7 +65,7 @@ public class HomepageActivity extends AppCompatActivity
     private CalorieService calorieService1, calorieService2;
     private HomepageActivity mSelf;
     private TextView suggestedCaloriesView, caloriesConsumedView, suggestedCaloriesNumView,
-        caloriesConsumedNumView;
+            caloriesConsumedNumView;
     private EditText searchEditText;
     private TextView textFoodCalories;
     private ListView foodListView;
@@ -84,7 +76,7 @@ public class HomepageActivity extends AppCompatActivity
 
     // Need to be calculated
     double bmr = 0, foodCalories = 0, caloriesConsumed = 0, caloriesSuggested = 0, proteinIntake = 0,
-        carbIntake = 0, fatIntake = 0;
+            carbIntake = 0, fatIntake = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +84,6 @@ public class HomepageActivity extends AppCompatActivity
         setContentView(R.layout.navdrawer_homepage);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         profileService = APIClient.getClient().create(ProfileService.class);
 
@@ -223,12 +214,12 @@ public class HomepageActivity extends AppCompatActivity
                             @Override
                             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                                 if(response.isSuccessful()) {
-                                        JsonObject result = response.body().getAsJsonObject();
-                                        foodCalories = result.get("calories").getAsDouble();
-                                        proteinIntake += result.get("protein").getAsDouble();
-                                        carbIntake += result.get("carb").getAsDouble();
-                                        fatIntake += result.get("fat").getAsDouble();
-                                        textFoodCalories.setText(Double.toString(foodCalories));
+                                    JsonObject result = response.body().getAsJsonObject();
+                                    foodCalories = result.get("calories").getAsDouble();
+                                    proteinIntake += result.get("protein").getAsDouble();
+                                    carbIntake += result.get("carb").getAsDouble();
+                                    fatIntake += result.get("fat").getAsDouble();
+                                    textFoodCalories.setText(Double.toString(foodCalories));
                                 } else {
 
                                 }
@@ -417,29 +408,23 @@ public class HomepageActivity extends AppCompatActivity
 
         authenticationService = APIClient.getClient().create(AuthenticationService.class);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
         // Calculate BMR, call API and get user's profile
         mSelf = this;
+
         Call<JsonElement> call = profileService.getprofile();
         call.enqueue(new Callback<JsonElement>() {
             int weightInPounds, height, age;
             double weightInKilograms, proteinGoal, carbGoal, fatGoal;
+            String firstName = " ", lastName = " ";
             String gender, activityLevel;
-             /// use this to pass on to the graph
+            /// use this to pass on to the graph
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 if(response.isSuccessful()) {
                     // Get profile and get the user's info
                     JsonObject jObj = response.body().getAsJsonObject();
-
+                    firstName = jObj.get("first_name").getAsString();
+                    lastName = jObj.get("last_name").getAsString();
                     weightInPounds = jObj.get("weight").getAsInt();
                     height = jObj.get("height").getAsInt();
                     gender = jObj.get("gender").getAsString();
@@ -485,6 +470,14 @@ public class HomepageActivity extends AppCompatActivity
                     setCarbGoalToGraph(goalEntries, barChart, data, (float)carbGoal);
                     setFatGoalToGraph(goalEntries, barChart, data, (float)fatGoal);
 
+                    JsonObject userObj = jObj.get("user").getAsJsonObject();
+                    String email = " ";
+                    if(!userObj.get("email").isJsonNull()) {
+                        email = userObj.get("email").getAsString();
+                    }
+
+                    setDrawerHeader(firstName, lastName, email);
+
                 } else {
                     Log.d("bmr", "nope");
                 }
@@ -496,6 +489,25 @@ public class HomepageActivity extends AppCompatActivity
             }
         });
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+
+    }
+
+    public void setDrawerHeader(String fName, String lName, String email) {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView navFullName = (TextView) headerView.findViewById(R.id.navFullName);
+        navFullName.setText(fName + " " + lName);
+        TextView navEmail = (TextView) headerView.findViewById(R.id.navEmail);
+        navEmail.setText(email);
+
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     public void setCalorieGoalToGraph(ArrayList<BarEntry> myList, BarChart myChart, BarData myData,
@@ -514,21 +526,21 @@ public class HomepageActivity extends AppCompatActivity
     }
 
     public void setCarbGoalToGraph(ArrayList<BarEntry> myList, BarChart myChart, BarData myData,
-                                      float carbGoalValue) {
+                                   float carbGoalValue) {
         myList.remove(2);
         myList.add(2, new BarEntry(3, carbGoalValue));
         setGraphSettings(myChart, myData);
     }
 
     public void setFatGoalToGraph(ArrayList<BarEntry> myList, BarChart myChart, BarData myData,
-                                   float fatGoalValue) {
+                                  float fatGoalValue) {
         myList.remove(3);
         myList.add(3, new BarEntry(4, fatGoalValue));
         setGraphSettings(myChart, myData);
     }
 
     public void setCalorieIntakeToGraph(ArrayList<BarEntry> myList, BarChart myChart, BarData myData,
-                                      float calorieIntakeValue) {
+                                        float calorieIntakeValue) {
         myList.remove(0);
         myList.add(0, new BarEntry(1, calorieIntakeValue));
         setGraphSettings(myChart, myData);
@@ -542,14 +554,14 @@ public class HomepageActivity extends AppCompatActivity
     }
 
     public void setCarbIntakeToGraph(ArrayList<BarEntry> myList, BarChart myChart, BarData myData,
-                                        float carbIntakeValue) {
+                                     float carbIntakeValue) {
         myList.remove(2);
         myList.add(2, new BarEntry(3, carbIntakeValue));
         setGraphSettings(myChart, myData);
     }
 
     public void setFatIntakeToGraph(ArrayList<BarEntry> myList, BarChart myChart, BarData myData,
-                                        float fatIntakeValue) {
+                                    float fatIntakeValue) {
         myList.remove(3);
         myList.add(3, new BarEntry(4, fatIntakeValue));
         setGraphSettings(myChart, myData);
@@ -704,14 +716,10 @@ public class HomepageActivity extends AppCompatActivity
             // GO TO REPORT PAGE
             Intent reportPageIntent = new Intent(this, ReportActivity.class);
             startActivity(reportPageIntent);
-        } else if (id == R.id.nav_share) {
-            // GO TO SHARE PAGE
-            Intent sharePageIntent = new Intent(this, ShareActivity.class);
-            startActivity(sharePageIntent);
-        } else if (id == R.id.nav_messages) {
-            // GO TO MESSAGE PAGE
-            Intent messagePageIntent = new Intent(this, MessageActivity.class);
-            startActivity(messagePageIntent);
+        } else if (id == R.id.nav_link) {
+            // GO TO LINK PAGE
+            Intent linkPageIntent = new Intent(this, LinkActivity.class);
+            startActivity(linkPageIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

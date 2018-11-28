@@ -24,6 +24,7 @@
     <string name="title_activity_share">Share</string>
     <string name="title_activity_message">Messages</string>
     <string name="title_activity_report">Report</string>
+    <string name="hello_blank_fragment">Blank</string>
 
     <string-array name="weight_units">
         <item>lbs</item>

@@ -10,12 +10,12 @@ import android.widget.TextView;
 
 import edu.csulb.rob.anacodiam.R;
 
-public class ShareActivity extends AppCompatActivity {
+public class LinkActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_share);
+        setContentView(R.layout.activity_message);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -28,8 +28,8 @@ public class ShareActivity extends AppCompatActivity {
             }
         });
 
-        TextView dummyText = (TextView)findViewById(R.id.dummy2);
-        dummyText.setText("SHARE PAGE");
+        TextView dummyText = (TextView)findViewById(R.id.dummy3);
+        dummyText.setText("MESSAGES PAGE");
     }
 
 }

@@ -208,7 +208,7 @@ public class FoodEntry extends Fragment {
                             JsonObject jObj = response.body().getAsJsonObject();
                             JsonArray commonArray =  jObj.getAsJsonArray("common");
                             for(int i = 0; i < commonArray.size(); i++) {
-                                foodAdapter = new CustomFoodAdapter(HomepageActivity.this, foodArrayList);
+                                foodAdapter = new CustomFoodAdapter(getContext(), foodArrayList);
                                 foodListView.setAdapter(foodAdapter);
 
                                 JsonObject obj = (JsonObject)commonArray.get(i);
@@ -230,7 +230,7 @@ public class FoodEntry extends Fragment {
                             // Iterate through JSON response and get "BRANDED" foods
                             JsonArray brandedArray =  jObj.getAsJsonArray("branded");
                             for(int i = 0; i < brandedArray.size(); i++) {
-                                foodAdapter = new CustomFoodAdapter(HomepageActivity.this, foodArrayList);
+                                foodAdapter = new CustomFoodAdapter(getContext(), foodArrayList);
                                 foodListView.setAdapter(foodAdapter);
 
                                 JsonObject obj = (JsonObject)brandedArray.get(i);
