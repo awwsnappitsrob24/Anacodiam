@@ -47,6 +47,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activities.UserRegistrationActivity" />
         <activity android:name=".Activities.ProfileActivity" />
+        <activity android:name=".Activities.FoodExerciseAlertActivity" />
         <activity android:name=".Activities.UpdateProfileActivity"></activity>
     </application>
 

@@ -4,9 +4,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.text.InputType;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -25,6 +29,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -75,8 +81,8 @@ public class HomepageActivity extends AppCompatActivity
     private VerticalTextView yAxisLabel;
 
     // Need to be calculated
-    double bmr = 0, foodCalories = 0, caloriesConsumed = 0, caloriesSuggested = 0, proteinIntake = 0,
-            carbIntake = 0, fatIntake = 0;
+    double bmr = 0, caloriesSuggested = 0;
+    float caloriesConsumed = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,11 +105,168 @@ public class HomepageActivity extends AppCompatActivity
         suggestedCaloriesNumView.setGravity(Gravity.CENTER_HORIZONTAL);
         suggestedCaloriesNumView.setTextSize(40);
 
+        textFoodCalories = (TextView) findViewById(R.id.editTxtCalorieList);
+
         yAxisLabel = (VerticalTextView) findViewById(R.id.yAxisTextView);
         yAxisLabel.setText("Calories");
 
         calorieService1 = NutritionixAPISearch.getClient().create(CalorieService.class);
         calorieService2 = APIClient.getClient().create(CalorieService.class);
+
+        //Set the table of food calorie data
+
+        FoodData foodData = Global.getInstance().getFoodData();
+        if(foodData == null){
+            foodData = new FoodData();
+            Global.getInstance().setFoodData(foodData);
+        }
+
+        final GradientDrawable gradientDrawable = new GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM,
+                new int[] {Color.parseColor("#C0C0C0"), Color.parseColor("#C0C0C0")});
+        gradientDrawable.setGradientCenter(0.f, 1.f);
+        gradientDrawable.setLevel(2);
+
+        //TableLayout table = (TableLayout) findViewById(R.id.tblFoodEntries);
+        //TableLayout.LayoutParams tableRowParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
+        //tableRowParams.setMargins(3, 3, 2, 10);
+        //table.setLayoutParams(tableRowParams);
+        //table.setBackgroundDrawable(gradientDrawable);
+
+        TextView newText;
+        TableRow.LayoutParams lp;
+        SpannableString spanString;
+        TableRow row;
+
+        int indexOffset = 4;
+        int rowHeight = 70;
+
+        foodData.sortByDate();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+
+        int indexCounter = 0;
+
+        for(int x = foodData.getSize() - 1; x >= 0 ; x--) {
+
+            //Food Name and Date
+            row = new TableRow(this);
+            row.setBackgroundColor(Color.CYAN);
+            row.setWeightSum(1);
+            //lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 50);
+            //row.setLayoutParams(lp);
+
+            spanString = new SpannableString(foodData.getName(x));
+            spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+            newText = new TextView(this);
+            newText.setText(spanString);
+            newText.setGravity(Gravity.LEFT);
+            lp = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 0.5f);
+            newText.setLayoutParams(lp);
+            row.addView(newText);
+
+            spanString = new SpannableString(sdf.format(foodData.getDate(x)));
+            spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+            newText = new TextView(this);
+            newText.setText(spanString);
+            newText.setGravity(Gravity.RIGHT);
+            lp = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 0.5f);
+            newText.setLayoutParams(lp);
+            row.addView(newText);
+
+            //table.addView(row, indexCounter);
+            indexCounter++;
+
+
+            //Calorie Row
+            row = new TableRow(this);
+            row.setGravity(Gravity.CENTER);
+            row.setWeightSum(1);
+
+            newText = new TextView(this);
+            spanString = new SpannableString("Calories: ");
+            spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+            newText.setText(spanString);
+            lp = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 0.2f);
+            newText.setLayoutParams(lp);
+            row.addView(newText);
+
+            newText = new TextView(this);
+            newText.setText(String.valueOf(foodData.getCalories(x)));
+            lp = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 0.8f);
+            newText.setLayoutParams(lp);
+            row.addView(newText);
+
+            //table.addView(row, indexCounter);
+            indexCounter++;
+
+
+            //Macros Header Row
+            row = new TableRow(this);
+            row.setGravity(Gravity.CENTER);
+            row.setWeightSum(1);
+
+
+            newText = new TextView(this);
+            spanString = new SpannableString("Carbohydrates");
+            spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+            newText.setText(spanString);
+            lp = new TableRow.LayoutParams(0, rowHeight, 0.33f);
+            lp.topMargin = 30;
+            newText.setLayoutParams(lp);
+            row.addView(newText);
+
+            newText = new TextView(this);
+            spanString = new SpannableString("Fats");
+            spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+            newText.setText(spanString);
+            lp = new TableRow.LayoutParams(0, rowHeight, 0.34f);
+            lp.topMargin = 30;
+            newText.setLayoutParams(lp);
+            row.addView(newText);
+
+            newText = new TextView(this);
+            spanString = new SpannableString("Protein");
+            spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+            newText.setText(spanString);
+            lp = new TableRow.LayoutParams(0, rowHeight, 0.33f);
+            lp.topMargin = 30;
+            newText.setLayoutParams(lp);
+            row.addView(newText);
+
+            //table.addView(row, indexCounter);
+            indexCounter++;
+
+
+            //Macros Data Row
+            row = new TableRow(this);
+            row.setGravity(Gravity.CENTER);
+            row.setWeightSum(1);
+
+            newText = new TextView(this);
+            newText.setText(String.valueOf((int) foodData.getCarbohydrates(x)));
+            lp = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 0.33f);
+            lp.leftMargin = 10;
+            newText.setLayoutParams(lp);
+            row.addView(newText);
+
+            newText = new TextView(this);
+            newText.setText(String.valueOf((int) foodData.getFats(x)));
+            lp = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 0.34f);
+            lp.leftMargin = 10;
+            newText.setLayoutParams(lp);
+            row.addView(newText);
+
+            newText = new TextView(this);
+            newText.setText(String.valueOf((int) foodData.getProtein(x)));
+            lp = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 0.33f);
+            lp.leftMargin = 10;
+            newText.setLayoutParams(lp);
+            row.addView(newText);
+
+            //table.addView(row, indexCounter);
+            indexCounter++;
+        }
 
         // Simulate someone taking a pill. Run this method every X seconds and feed the app calories
         // Show changes in the graph.
@@ -156,253 +319,8 @@ public class HomepageActivity extends AppCompatActivity
 
             @Override
             public void onClick(View view) {
-                //Build an alert dialog where the user can enter the amount of calories ingested.
-                AlertDialog.Builder builder = new AlertDialog.Builder(HomepageActivity.this);
-                builder.setTitle("Calorie Input");
-
-                Context context = view.getContext();
-                LinearLayout layout = new LinearLayout(context);
-                layout.setOrientation(LinearLayout.VERTICAL);
-
-                //Add Food Name Fields
-                final TextView txtFoodName = new TextView (HomepageActivity.this);
-                txtFoodName.setText("Food:");
-                txtFoodName.setTextSize(20);
-                layout.addView(txtFoodName);
-
-                // Add food user entry
-                mySearchView = new SearchView(getApplicationContext());
-                mySearchView.setInputType(InputType.TYPE_CLASS_TEXT);
-                int searchSrcTextId = getResources().getIdentifier("android:id/search_src_text",
-                        null, null);
-                searchEditText = (EditText) mySearchView.findViewById(searchSrcTextId);
-                searchEditText.setTextColor(Color.BLACK);
-                mySearchView.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                        searchEditText.setFocusable(true);
-                        searchEditText.setFocusableInTouchMode(true);
-                        searchEditText.requestFocus();
-                        return true;
-                    }
-                });
-                layout.addView(mySearchView);
-
-                // Instantiate ListView
-                foodListView = new ListView(HomepageActivity.this);
-                foodListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                        Food foodSelected = (Food)foodListView.getItemAtPosition(i);
-                        String foodNameSelected = foodSelected.getFoodName();
-
-                        searchEditText.setText(foodNameSelected);
-
-                        // hide keyboard after clicking on item
-                        mySearchView.clearFocus();
-
-                        // hide list view
-                        foodListView.setVisibility(View.GONE);
-
-                        // make the search text not focusable since the user has already selected
-                        searchEditText.setFocusable(false);
-
-                        // Call nutrients API
-                        Call<JsonElement> call = calorieService2.getfoodnutrients(mySearchView.getQuery().toString());
-                        call.enqueue(new Callback<JsonElement>() {
-                            @Override
-                            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                                if(response.isSuccessful()) {
-                                    JsonObject result = response.body().getAsJsonObject();
-                                    foodCalories = result.get("calories").getAsDouble();
-                                    proteinIntake += result.get("protein").getAsDouble();
-                                    carbIntake += result.get("carb").getAsDouble();
-                                    fatIntake += result.get("fat").getAsDouble();
-                                    textFoodCalories.setText(Double.toString(foodCalories));
-                                } else {
-
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<JsonElement> call, Throwable t) {
-                                call.cancel();
-                            }
-                        });
-                    }
-                });
-                layout.addView(foodListView);
-
-                // Call "Search Instant" Nutritionix API here
-                mySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-
-                        // make edit text not focusable and hide list view
-                        searchEditText.setFocusable(false);
-                        //layout.removeView(foodListView);
-                        foodListView.setVisibility(View.GONE);
-
-                        // hide keyboard after hitting search key
-                        mySearchView.clearFocus();
-
-
-                        // also call nutrients api here
-                        Call<JsonElement> call = calorieService2.getfoodnutrients(mySearchView.getQuery().toString());
-                        call.enqueue(new Callback<JsonElement>() {
-                            @Override
-                            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                                if(response.isSuccessful()) {
-                                    JsonObject result = response.body().getAsJsonObject();
-                                    foodCalories = result.get("calories").getAsDouble();
-                                    proteinIntake += result.get("protein").getAsDouble();
-                                    carbIntake += result.get("carb").getAsDouble();
-                                    fatIntake += result.get("fat").getAsDouble();
-                                    textFoodCalories.setText(Double.toString(foodCalories));
-                                } else {
-
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<JsonElement> call, Throwable t) {
-                                call.cancel();
-                            }
-                        });
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String query) {
-                        // Call instant search
-                        //foodListView.setVisibility(View.VISIBLE);
-
-                        // to get focus back.... works!!!!
-                        searchEditText.setFocusable(true);
-                        searchEditText.setFocusableInTouchMode(true);
-                        searchEditText.requestFocus();
-
-                        // Make list view visible again
-                        foodListView.setVisibility(View.VISIBLE);
-
-                        Call<JsonElement> call = calorieService1.searchfood(mySearchView.getQuery().toString());
-                        call.enqueue(new Callback<JsonElement>() {
-                            @Override
-                            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                                if(response.isSuccessful()) {
-
-                                    foodArrayList = new ArrayList<Food>();
-
-                                    // Iterate through JSON response and get "COMMON" foods
-                                    JsonObject jObj = response.body().getAsJsonObject();
-                                    JsonArray commonArray =  jObj.getAsJsonArray("common");
-                                    for(int i = 0; i < commonArray.size(); i++) {
-                                        foodAdapter = new CustomFoodAdapter(HomepageActivity.this, foodArrayList);
-                                        foodListView.setAdapter(foodAdapter);
-
-                                        JsonObject obj = (JsonObject)commonArray.get(i);
-                                        String foodName = obj.get("food_name").getAsString();
-                                        //Log.d("foodname", foodName);
-
-                                        // Get thumbnail from photo json object
-                                        JsonObject photoObj = obj.get("photo").getAsJsonObject();
-                                        String thumb;
-                                        if(!photoObj.get("thumb").isJsonNull()) {
-                                            thumb = photoObj.get("thumb").getAsString();
-                                        }
-                                        else {
-                                            thumb = null;
-                                        }
-                                        foodArrayList.add(new Food(thumb, foodName));
-                                    }
-
-                                    // Iterate through JSON response and get "BRANDED" foods
-                                    JsonArray brandedArray =  jObj.getAsJsonArray("branded");
-                                    for(int i = 0; i < brandedArray.size(); i++) {
-                                        foodAdapter = new CustomFoodAdapter(HomepageActivity.this, foodArrayList);
-                                        foodListView.setAdapter(foodAdapter);
-
-                                        JsonObject obj = (JsonObject)brandedArray.get(i);
-                                        String foodName = obj.get("food_name").getAsString();
-
-                                        // Get thumbnail from photo json object
-                                        JsonObject photoObj = obj.get("photo").getAsJsonObject();
-                                        String thumb;
-                                        if(!photoObj.get("thumb").isJsonNull()) {
-                                            thumb = photoObj.get("thumb").getAsString();
-                                        }
-                                        else {
-                                            thumb = null;
-                                        }
-                                        foodArrayList.add(new Food(thumb, foodName));
-                                    }
-                                } else {
-
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<JsonElement> call, Throwable t) {
-                                call.cancel();
-                            }
-                        });
-                        return true;
-                    }
-                });
-
-                //Add Calorie Fields
-                final TextView txtCalories = new TextView (HomepageActivity.this);
-                txtCalories.setText("Calories:");
-                txtCalories.setTextSize(20);
-                layout.addView(txtCalories);
-
-                textFoodCalories = new TextView(HomepageActivity.this);
-                //textFoodCalories.setText(Double.toString(foodCalories));
-                textFoodCalories.setTextSize(25);
-                layout.addView(textFoodCalories);
-
-                //Add Date Fields
-                final TextView txtDate = new TextView (HomepageActivity.this);
-                txtDate.setText("Date:");
-                txtDate.setTextSize(20);
-                layout.addView(txtDate);
-
-                final DatePicker pckDate = new DatePicker(HomepageActivity.this);
-                pckDate.setPadding(32, 8, 32, 0);
-                pckDate.setScaleX(0.9f);
-                pckDate.setScaleY(0.9f);
-                layout.addView(pckDate);
-
-                builder.setView(layout);
-
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //Get value from date picker
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(pckDate.getYear(), pckDate.getMonth(), pckDate.getDayOfMonth());
-
-                        // Get total calories, protein, carbs, and fat for food
-                        caloriesConsumed += Double.parseDouble(textFoodCalories.getText().toString());
-                        caloriesConsumedNumView.setText(String.format("%.2f", caloriesConsumed));
-
-                        setCalorieIntakeToGraph(intakeEntries, barChart, data, (float)caloriesConsumed);
-
-                        // Fat has 9 calories per gram, protein and crabs have 4 calories per gram
-                        setProteinIntakeToGraph(intakeEntries, barChart, data, (float)proteinIntake * 4);
-                        setCarbIntakeToGraph(intakeEntries, barChart, data, (float)carbIntake * 4);
-                        setFatIntakeToGraph(intakeEntries, barChart, data, (float)fatIntake * 9);
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
+                Intent a = new Intent(getApplicationContext(), FoodExerciseAlertActivity.class);
+                startActivity(a);
             }
         });
 
@@ -495,6 +413,24 @@ public class HomepageActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        // Get info from user entries and set them to the graph
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            float caloriesFromEntry = extras.getFloat("calories", 0);
+            float carbsFromEntry = extras.getFloat("carbohydrates", 0);
+            float fatsFromEntry = extras.getFloat("fats", 0);
+            float proteinsFromEntry = extras.getFloat("protein", 0);
+
+            // Fat has 9 calories per gram, protein and carbs have 4 calories per gram
+            setCalorieIntakeToGraph(intakeEntries, barChart, data, caloriesFromEntry);
+            setProteinIntakeToGraph(intakeEntries, barChart, data, proteinsFromEntry * 4);
+            setCarbIntakeToGraph(intakeEntries, barChart, data, carbsFromEntry * 4);
+            setFatIntakeToGraph(intakeEntries, barChart, data, fatsFromEntry * 9);
+
+            // Get total calories, protein, carbs, and fat for food
+            caloriesConsumed += caloriesFromEntry;
+            caloriesConsumedNumView.setText(String.format("%.2f", caloriesConsumed));
+        }
 
     }
 

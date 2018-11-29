@@ -42,7 +42,7 @@ public class FoodEntry extends Fragment {
     View foodFragmentView;
 
     SearchView mySearchView;
-    EditText searchEditText;
+    EditText searchEditText, caloriesTxt, carbsTxt, fatsTxt, proteinTxt;
     ListView foodListView;
     double foodCalories;
     TextView textFoodCalories;
@@ -85,6 +85,13 @@ public class FoodEntry extends Fragment {
         calorieService2 = APIClient.getClient().create(CalorieService.class);
 
         textFoodCalories = foodFragmentView.findViewById(R.id.txtFoodCalories);
+        carbsTxt = (EditText) foodFragmentView.findViewById(R.id.txtFoodEntryCarbohydrates);
+        fatsTxt = (EditText) foodFragmentView.findViewById(R.id.txtFoodEntryFats);
+        proteinTxt = (EditText) foodFragmentView.findViewById(R.id.txtFoodEntryProtein);
+        textFoodCalories.setFocusable(false);
+        carbsTxt.setFocusable(false);
+        fatsTxt.setFocusable(false);
+        proteinTxt.setFocusable(false);
 
         mySearchView = foodFragmentView.findViewById(R.id.txtFoodName);
         mySearchView.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -133,6 +140,9 @@ public class FoodEntry extends Fragment {
                             JsonObject result = response.body().getAsJsonObject();
                             foodCalories = result.get("calories").getAsDouble();
                             textFoodCalories.setText(Double.toString(foodCalories));
+                            carbsTxt.setText(result.get("carb").getAsString());
+                            fatsTxt.setText(result.get("fat").getAsString());
+                            proteinTxt.setText(result.get("protein").getAsString());
                         } else {
 
                         }
@@ -170,6 +180,9 @@ public class FoodEntry extends Fragment {
                             JsonObject result = response.body().getAsJsonObject();
                             foodCalories = result.get("calories").getAsDouble();
                             textFoodCalories.setText(Double.toString(foodCalories));
+                            carbsTxt.setText(result.get("carb").getAsString());
+                            fatsTxt.setText(result.get("fat").getAsString());
+                            proteinTxt.setText(result.get("protein").getAsString());
                         } else {
 
                         }
@@ -263,12 +276,6 @@ public class FoodEntry extends Fragment {
 
 
 
-
-
-
-
-
-
         //Set the button click events
         Button temp = (Button) foodFragmentView.findViewById(R.id.btnFoodEntryOK);
         temp.setOnClickListener(new View.OnClickListener() {
@@ -281,24 +288,23 @@ public class FoodEntry extends Fragment {
                 i.putExtra("type", "food");
 
                 //Get value from Name field
-                EditText txt = (EditText) foodFragmentView.findViewById(R.id.txtFoodName);
-                i.putExtra("name", txt.getText().toString());
+                i.putExtra("name", searchEditText.getText().toString());
 
                 //Get value from Calories field
-                txt = (EditText) foodFragmentView.findViewById(R.id.txtFoodCalories);
-                i.putExtra("calories", Integer.parseInt(txt.getText().toString()));
+                caloriesTxt = (EditText) foodFragmentView.findViewById(R.id.txtFoodCalories);
+                i.putExtra("calories", Float.parseFloat(caloriesTxt.getText().toString()));
 
                 //Get value from Carbohydrates field
-                txt = (EditText) foodFragmentView.findViewById(R.id.txtFoodEntryCarbohydrates);
-                i.putExtra("carbohydrates", Float.parseFloat(txt.getText().toString()));
+                carbsTxt = (EditText) foodFragmentView.findViewById(R.id.txtFoodEntryCarbohydrates);
+                i.putExtra("carbohydrates", Float.parseFloat(carbsTxt.getText().toString()));
 
                 //Get value from Fats field
-                txt = (EditText) foodFragmentView.findViewById(R.id.txtFoodEntryFats);
-                i.putExtra("fats", Float.parseFloat(txt.getText().toString()));
+                fatsTxt = (EditText) foodFragmentView.findViewById(R.id.txtFoodEntryFats);
+                i.putExtra("fats", Float.parseFloat(fatsTxt.getText().toString()));
 
                 //Get value from Protein field
-                txt = (EditText) foodFragmentView.findViewById(R.id.txtFoodEntryProtein);
-                i.putExtra("protein", Float.parseFloat(txt.getText().toString()));
+                proteinTxt = (EditText) foodFragmentView.findViewById(R.id.txtFoodEntryProtein);
+                i.putExtra("protein", Float.parseFloat(proteinTxt.getText().toString()));
 
                 //Set value from the calendar
                 if(calendar == null){
@@ -308,9 +314,7 @@ public class FoodEntry extends Fragment {
 
                 i.putExtra("date", calendar);
 
-
-
-                startActivity(i);
+                startActivityForResult(i, 0);
             }
         });
 
@@ -326,4 +330,6 @@ public class FoodEntry extends Fragment {
         //Return the view
         return foodFragmentView;
     }
+
+
 }
