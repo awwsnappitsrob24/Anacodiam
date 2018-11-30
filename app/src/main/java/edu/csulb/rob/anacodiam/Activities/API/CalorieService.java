@@ -23,4 +23,8 @@ public interface CalorieService {
     @GET("calories/evaluate_nutrients?query=")
     Call<JsonElement> getfoodnutrients(@Query("query") String userQuery);
 
+    // Calories Burned From Exercise Search
+    @GET("calories/evaluate_calories?query=")
+    Call<JsonElement> getcaloriesburned(@Query("query") String userQuery);
+
 }

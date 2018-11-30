@@ -8,6 +8,22 @@
     tools:context=".Activities.HomepageActivity"
     tools:showIn="@layout/app_bar_homepage">
 
+    <TextView
+        android:id="@+id/caloriesBurnedView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="13dp"
+        android:layout_marginRight="13dp"
+        android:gravity="center"
+        android:text="Calories\n Burned"
+        android:textAppearance="@android:style/TextAppearance.Small"
+        app:layout_constraintBottom_toTopOf="@+id/caloriesConsumedNumView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.73"
+        app:layout_constraintStart_toEndOf="@+id/suggestedCaloriesView"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintVertical_bias="1.0" />
+
     <edu.csulb.rob.anacodiam.Activities.VerticalTextView
         android:id="@+id/yAxisTextView"
         android:layout_width="wrap_content"
@@ -20,15 +36,16 @@
 
     <TextView
         android:id="@+id/suggestedCaloriesNumView"
-        android:layout_width="0dp"
+        android:layout_width="104dp"
         android:layout_height="50dp"
-        android:layout_marginStart="46dp"
-        android:layout_marginLeft="46dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:gravity="center_vertical|center_horizontal"
-        android:textAppearance="@android:style/TextAppearance.Large"
+        android:textAppearance="@android:style/TextAppearance.Medium"
         app:layout_constraintEnd_toStartOf="@+id/caloriesConsumedNumView"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/suggestedCaloriesView" />
 
@@ -55,15 +72,13 @@
         android:id="@+id/suggestedCaloriesView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="19dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
         android:gravity="center"
         android:text="Suggested\n Caloric Intake"
-        android:textAppearance="@android:style/TextAppearance.Medium"
-        app:layout_constraintEnd_toStartOf="@+id/caloriesConsumedView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+        android:textAppearance="@android:style/TextAppearance.Small"
+        app:layout_constraintBottom_toTopOf="@+id/caloriesConsumedNumView"
+        app:layout_constraintStart_toStartOf="@+id/scrollView2" />
 
     <TextView
         android:id="@+id/caloriesConsumedView"
@@ -73,23 +88,42 @@
         android:layout_marginRight="13dp"
         android:gravity="center"
         android:text="Calories\n Consumed"
-        android:textAppearance="@android:style/TextAppearance.Medium"
+        android:textAppearance="@android:style/TextAppearance.Small"
         app:layout_constraintBottom_toTopOf="@+id/caloriesConsumedNumView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.162"
         app:layout_constraintStart_toEndOf="@+id/suggestedCaloriesView"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
     <TextView
         android:id="@+id/caloriesConsumedNumView"
-        android:layout_width="0dp"
+        android:layout_width="96dp"
         android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginEnd="38dp"
         android:layout_marginRight="38dp"
         android:gravity="center_vertical|center_horizontal"
+        android:textAppearance="@android:style/TextAppearance.Medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.615"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/caloriesConsumedView" />
+
+    <TextView
+        android:id="@+id/caloriesBurnedNumView"
+        android:layout_width="85dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:gravity="center_vertical|center_horizontal"
         android:textAppearance="@android:style/TextAppearance.Large"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/suggestedCaloriesNumView"
-        app:layout_constraintTop_toBottomOf="@+id/caloriesConsumedView" />
+        app:layout_constraintHorizontal_bias="0.865"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/caloriesBurnedView" />
 
     <ScrollView
         android:id="@+id/scrollView2"

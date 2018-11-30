@@ -57,6 +57,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import android.app.AlertDialog;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -71,7 +73,7 @@ public class HomepageActivity extends AppCompatActivity
     private CalorieService calorieService1, calorieService2;
     private HomepageActivity mSelf;
     private TextView suggestedCaloriesView, caloriesConsumedView, suggestedCaloriesNumView,
-            caloriesConsumedNumView;
+            caloriesConsumedNumView, caloriesBurnedTxt;
     private EditText searchEditText;
     private TextView textFoodCalories;
     private ListView foodListView;
@@ -81,8 +83,8 @@ public class HomepageActivity extends AppCompatActivity
     private VerticalTextView yAxisLabel;
 
     // Need to be calculated
-    double bmr = 0, caloriesSuggested = 0;
-    float caloriesConsumed = 0;
+    double bmr = 0;
+    int caloriesSuggested = 0, caloriesConsumed = 0, caloriesBurned = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,10 +102,15 @@ public class HomepageActivity extends AppCompatActivity
 
         caloriesConsumedNumView.setGravity(Gravity.CENTER_HORIZONTAL);
         caloriesConsumedNumView.setTextSize(40);
-        caloriesConsumedNumView.setText(Double.toString(caloriesConsumed));
+        caloriesConsumedNumView.setText(Integer.toString(caloriesConsumed));
 
         suggestedCaloriesNumView.setGravity(Gravity.CENTER_HORIZONTAL);
         suggestedCaloriesNumView.setTextSize(40);
+
+        caloriesBurnedTxt = (TextView) findViewById(R.id.caloriesBurnedNumView);
+        caloriesBurnedTxt.setGravity(Gravity.CENTER_HORIZONTAL);
+        caloriesBurnedTxt.setTextSize(40);
+        caloriesBurnedTxt.setText(Integer.toString(caloriesBurned));
 
         textFoodCalories = (TextView) findViewById(R.id.editTxtCalorieList);
 
@@ -361,19 +368,19 @@ public class HomepageActivity extends AppCompatActivity
                         carbGoal = caloriesSuggested * .45;
                         proteinGoal = caloriesSuggested * .35;
                         fatGoal = caloriesSuggested * .20;
-                        suggestedCaloriesNumView.setText(Double.toString(caloriesSuggested));
+                        suggestedCaloriesNumView.setText(Integer.toString(caloriesSuggested));
                     } else if(activityLevel.equalsIgnoreCase("Mildly Active")) {
                         caloriesSuggested = (int) Math.round(bmr * 1.76);
                         carbGoal = caloriesSuggested * .50;
                         proteinGoal = caloriesSuggested * .30;
                         fatGoal = caloriesSuggested * .20;
-                        suggestedCaloriesNumView.setText(Double.toString(caloriesSuggested));
+                        suggestedCaloriesNumView.setText(Integer.toString(caloriesSuggested));
                     } else if(activityLevel.equalsIgnoreCase("Very Active")) {
                         caloriesSuggested = (int) Math.round(bmr * 2.25);
                         carbGoal = caloriesSuggested * .55;
                         proteinGoal = caloriesSuggested * .25;
                         fatGoal = caloriesSuggested * .20;
-                        suggestedCaloriesNumView.setText(Double.toString(caloriesSuggested));
+                        suggestedCaloriesNumView.setText(Integer.toString(caloriesSuggested));
                     }
 
                     Log.d("stuff", Integer.toString(weightInPounds));
@@ -416,10 +423,16 @@ public class HomepageActivity extends AppCompatActivity
         // Get info from user entries and set them to the graph
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
+            // from food
             float caloriesFromEntry = extras.getFloat("calories", 0);
             float carbsFromEntry = extras.getFloat("carbohydrates", 0);
             float fatsFromEntry = extras.getFloat("fats", 0);
             float proteinsFromEntry = extras.getFloat("protein", 0);
+
+            // from exercise
+            double caloriesFromExerciseEntry = extras.getDouble("caloriesburned", 0);
+            int caloriesBurnedRounded = (int)Math.round(caloriesFromExerciseEntry);
+            Log.d("burned", Double.toString(caloriesFromExerciseEntry));
 
             // Fat has 9 calories per gram, protein and carbs have 4 calories per gram
             setCalorieIntakeToGraph(intakeEntries, barChart, data, caloriesFromEntry);
@@ -429,7 +442,10 @@ public class HomepageActivity extends AppCompatActivity
 
             // Get total calories, protein, carbs, and fat for food
             caloriesConsumed += caloriesFromEntry;
-            caloriesConsumedNumView.setText(String.format("%.2f", caloriesConsumed));
+            caloriesConsumedNumView.setText(Integer.toString(caloriesConsumed));
+
+            // Get calories burned from exercise
+            caloriesBurnedTxt.setText(Integer.toString(caloriesBurnedRounded));
         }
 
     }
